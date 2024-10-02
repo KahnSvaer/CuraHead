@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +29,7 @@ class LandingPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(child: Container()), // Empty space for main content
-          BottomNavigationBarRow(), // Bottom navigation row
+          const BottomNavigationBarRow(), // Bottom navigation row
         ],
       ), // Empty body
     );
@@ -117,7 +119,7 @@ class BottomNavigationBarRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -171,7 +173,7 @@ class BottomNavigationBarRow extends StatelessWidget {
   }
 }
 
-class NavItemButton extends StatelessWidget {
+class NavItemButton extends StatefulWidget {
   final IconData icon;
   final String label;
   final double iconSize;
@@ -179,6 +181,11 @@ class NavItemButton extends StatelessWidget {
   final Color textColor;
   final Color iconColor;
   final Color pressedColor;
+  final Color boxColor;
+  final bool showOutline; // Flag to show or hide outline
+  final Color outlineColor; // Color of the outline
+  final double outlineWidth; // Width of the outline
+  final double buttonWidth;
   final VoidCallback onTap;
 
   const NavItemButton({
@@ -189,31 +196,72 @@ class NavItemButton extends StatelessWidget {
     this.textSize = 12.0, // Default text size
     this.iconColor = Colors.white, // Default icon color
     this.textColor = Colors.white, // Default text color
-    this.pressedColor = Colors.black,
+    this.pressedColor = Colors.blueAccent, // Color when pressed
+    this.boxColor = Colors.transparent, // Transparent by default
+    this.outlineColor = Colors.transparent, // Default outline color
+    this.outlineWidth = 0, // Default outline width
+    this.showOutline = false,
+    this.buttonWidth = 90,
     required this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(
-              icon,
-              color: iconColor,
-              size: iconSize,
-            ),
-            color: Colors.blue,
-            onPressed: onTap,
-          ),
+  NavItemButtonState createState() => NavItemButtonState();
+}
 
-          SizedBox(height: 4), // Small gap between icon and label
-          Text(
-            label,
-            style: TextStyle(fontSize: textSize, color: textColor),
-          ),
-        ],
+class NavItemButtonState extends State<NavItemButton> {
+  bool _isPressed = false; // Track whether the button is pressed
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap, // Trigger the provided onTap function
+      onTapDown: (_) {
+        setState(() {
+          _isPressed = true; // Button is pressed
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _isPressed = false; // Button is released
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          _isPressed = false; // Button release is cancelled
+        });
+      },
+      child:
+      Container(
+        width: widget.buttonWidth,
+        decoration: BoxDecoration(
+          color: _isPressed ? widget.pressedColor : widget.boxColor, // Change box color when pressed
+          borderRadius: BorderRadius.circular(16.0), // Rounded edges
+          border: widget.showOutline
+              ? Border.all(
+            color: widget.outlineColor.withOpacity(0.3), // Outline color from property
+            width: widget.outlineWidth, // Outline width from property
+          )
+              : null, // No border if showOutline is false
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              widget.icon,
+              color: widget.iconColor,
+              size: widget.iconSize,
+
+            ),
+            const SizedBox(height: 0), // Small gap between icon and label
+            Text(
+              widget.label,
+              style: TextStyle(fontSize: widget.textSize, color: widget.textColor),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
