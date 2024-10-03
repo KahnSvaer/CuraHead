@@ -124,45 +124,37 @@ class BottomNavigationBarRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           // Home button
-          NavItemButton(
+          buildNavButton(
+            context,
             icon: Icons.home_outlined,
             label: 'Home',
-            iconSize: iconImageSize, // Customize size if needed
-            iconColor: iconImageColor,
-            textColor: textColor,
             onTap: () {
               print('Navigate to Home Page');
             },
           ),
           // Chat button
-          NavItemButton(
+          buildNavButton(
+            context,
             icon: Icons.chat_outlined,
             label: 'Chats',
-            iconSize: iconImageSize,
-            iconColor: iconImageColor,
-            textColor: textColor,
             onTap: () {
               print('Navigate to Chat Page');
             },
           ),
-          // Exam button (using school icon)
-          NavItemButton(
+          // Exam button
+          buildNavButton(
+            context,
             icon: Icons.school_outlined,
             label: 'Assessment',
-            iconSize: iconImageSize,
-            iconColor: iconImageColor,
-            textColor: textColor,
             onTap: () {
               print('Navigate to Exam Page');
             },
           ),
           // Settings button
-          NavItemButton(
+          buildNavButton(
+            context,
             icon: Icons.settings_outlined,
             label: 'Settings',
-            iconSize: iconImageSize,
-            iconColor: iconImageColor,
-            textColor: textColor,
             onTap: () {
               print('Navigate to Settings Page');
             },
@@ -171,97 +163,42 @@ class BottomNavigationBarRow extends StatelessWidget {
       ),
     );
   }
-}
 
-class NavItemButton extends StatefulWidget {
-  final IconData icon;
-  final String label;
-  final double iconSize;
-  final double textSize;
-  final Color textColor;
-  final Color iconColor;
-  final Color pressedColor;
-  final Color boxColor;
-  final bool showOutline; // Flag to show or hide outline
-  final Color outlineColor; // Color of the outline
-  final double outlineWidth; // Width of the outline
-  final double buttonWidth;
-  final VoidCallback onTap;
-
-  const NavItemButton({
-    super.key,
-    required this.icon,
-    required this.label,
-    this.iconSize = 28.0, // Default icon size
-    this.textSize = 12.0, // Default text size
-    this.iconColor = Colors.white, // Default icon color
-    this.textColor = Colors.white, // Default text color
-    this.pressedColor = Colors.blueAccent, // Color when pressed
-    this.boxColor = Colors.transparent, // Transparent by default
-    this.outlineColor = Colors.transparent, // Default outline color
-    this.outlineWidth = 0, // Default outline width
-    this.showOutline = false,
-    this.buttonWidth = 90,
-    required this.onTap,
-  });
-
-  @override
-  NavItemButtonState createState() => NavItemButtonState();
-}
-
-class NavItemButtonState extends State<NavItemButton> {
-  bool _isPressed = false; // Track whether the button is pressed
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap, // Trigger the provided onTap function
-      onTapDown: (_) {
-        setState(() {
-          _isPressed = true; // Button is pressed
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          _isPressed = false; // Button is released
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          _isPressed = false; // Button release is cancelled
-        });
-      },
-      child:
-      Container(
-        width: widget.buttonWidth,
-        decoration: BoxDecoration(
-          color: _isPressed ? widget.pressedColor : widget.boxColor, // Change box color when pressed
-          borderRadius: BorderRadius.circular(16.0), // Rounded edges
-          border: widget.showOutline
-              ? Border.all(
-            color: widget.outlineColor.withOpacity(0.3), // Outline color from property
-            width: widget.outlineWidth, // Outline width from property
-          )
-              : null, // No border if showOutline is false
+  // Helper function to create a filled button
+  Widget buildNavButton(BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return FilledButton(
+      onPressed: onTap,
+      style: FilledButton.styleFrom(
+        backgroundColor: Colors.transparent, // Button background color
+        foregroundColor: Colors.white, // Icon and text color
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), // Rounded corners
         ),
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              widget.icon,
-              color: widget.iconColor,
-              size: widget.iconSize,
-
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: iconImageSize, // Icon size
+            color: iconImageColor, // Icon color
+          ),
+          const SizedBox(height: 2), // Gap between icon and text
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12, // Text size
+              color: textColor, // Text color
             ),
-            const SizedBox(height: 0), // Small gap between icon and label
-            Text(
-              widget.label,
-              style: TextStyle(fontSize: widget.textSize, color: widget.textColor),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
