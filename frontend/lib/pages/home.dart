@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/star_rating.dart';
+
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -11,8 +14,7 @@ class HomePage extends StatelessWidget {
         Expanded(
           child: Container(
               color: const Color(0xfff4f6ff),
-              padding:
-              const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -260,7 +262,7 @@ class _TherapistCard extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     // Set height ratio for image and card
-    final double imageHeight = screenHeight * 0.11; // 15% of screen height
+    final double imageHeight = screenHeight * 0.11; // 11% of screen height
     final double cardHeight = imageHeight; // Card height including padding
 
     return OutlinedButton(
@@ -279,13 +281,13 @@ class _TherapistCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Therapist Image
+            // Therapist Image with Placeholder Icon
             ClipRRect(
               borderRadius: BorderRadius.circular(12), // Rounded corners for image
-              child: Image.network(
-                height: imageHeight, // Set the image height
-                imageUrl,
-                fit: BoxFit.cover,
+              child: SizedBox(
+                height: imageHeight,
+                width: imageHeight, // Make width same as height for square image/icon
+                child: _buildImage(imageUrl, imageHeight), // Use the new image builder
               ),
             ),
             const SizedBox(width: 10), // Space between image and text
@@ -303,7 +305,13 @@ class _TherapistCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5), // Space between name and rating
-                  _buildRatingBar(rating), // Build the star rating
+                  // Using the RatingStars widget here
+                  RatingStars(
+                    rating: rating,
+                    starSize: 16.0, // Size of each star
+                    spacing: 4.0, // Space between stars
+                    alignment: MainAxisAlignment.start, // Align stars to the left
+                  ),
                 ],
               ),
             ),
@@ -313,22 +321,30 @@ class _TherapistCard extends StatelessWidget {
     );
   }
 
-  // Method to create the star rating bar
-  Widget _buildRatingBar(double rating) {
-    int starCount = rating.toInt(); // Integer part for full stars
-    double halfStar = rating - starCount >= 0.5 ? 1.0 : 0.0; // Check if there's a half star
-    List<Widget> stars = List.generate(5, (index) {
-      if (index < starCount) {
-        return const Icon(Icons.star, color: Colors.amber, size: 16);
-      } else if (index == starCount && halfStar == 1.0) {
-        return const Icon(Icons.star_half, color: Colors.amber, size: 16);
-      } else {
-        return const Icon(Icons.star_border, color: Colors.amber, size: 16);
-      }
-    });
-
-    return Row(children: stars);
+  // Method to create the therapist image with error handling and placeholder
+  Widget _buildImage(String url, double size) {
+    return Image.network(
+      url,
+      height: size, // Set the image height
+      width: size, // Set the image width to match the height for a square
+      fit: BoxFit.cover,
+      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+        // Show default person icon in case of error or empty URL
+        return Icon(
+          Icons.person,
+          size: size, // Resize to match the height and width of the container
+          color: Colors.grey,
+        );
+      },
+      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+        // Show default person icon while the image is loading
+        if (loadingProgress == null) return child;
+        return Icon(
+          Icons.person,
+          size: size, // Resize to match the height of the container
+          color: Colors.grey, // Optional: color for the icon
+        );
+      },
+    );
   }
 }
-
-

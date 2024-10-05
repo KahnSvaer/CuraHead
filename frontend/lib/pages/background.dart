@@ -5,6 +5,8 @@ import 'chat.dart';
 import 'assessment.dart';
 import 'settings.dart';
 
+import 'therapist_intro.dart';
+
 class BackGroundPage extends StatefulWidget {
   const BackGroundPage({super.key});
 
@@ -13,7 +15,7 @@ class BackGroundPage extends StatefulWidget {
 }
 
 class BackGroundPageState extends State<BackGroundPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 4; //TODO: put equal 0 later
 
   // List of pages to navigate to
   final List<Widget> _pages = [
@@ -21,6 +23,7 @@ class BackGroundPageState extends State<BackGroundPage> {
     const ChatPage(),
     const AssessmentPage(),
     const SettingsPage(),
+    const TherapistIntroPage() //Page Tester TODO: Delete Later
   ];
 
   void _onItemTapped(int index) {
