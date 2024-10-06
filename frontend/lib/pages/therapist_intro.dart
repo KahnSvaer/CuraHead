@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/heading_bar.dart';
 import '../widgets/star_rating.dart';
+import '../widgets/custom_bottom_navigator.dart';
 
 class TherapistIntroPage extends StatelessWidget {
   final String name;
@@ -28,55 +29,52 @@ class TherapistIntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const CustomHeadingBar(
-          title: 'Therapist',
-          heightPercentage: 0.08,
-        ),
-        Expanded(
-            child: Container(
-                color: const Color(0xfff4f6ff),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20), // Space below the app bar
+    return Scaffold(
+      appBar: const CustomHeadingBar(
+        title: 'Therapist',
+      ),
+      body: Container(
+              color: const Color(0xfff4f6ff),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20), // Space below the app bar
 
-                      const TherapistImageWidget(
-                        imageUrl: '',
-                        widthPercentage: 50,
-                        heightPercentage: 50,
+                    const TherapistImageWidget(
+                      imageUrl: '',
+                      widthPercentage: 50,
+                      heightPercentage: 50,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center, // Center the text
-                      ),
-                      const SizedBox(height: 10),
-                      RatingStars(
-                        rating: stars, // Replace with dynamic rating if needed
-                        starSize: 30.0, // Example: Custom star size
-                        spacing: 6.0, // Example: Custom spacing between stars
-                        alignment: MainAxisAlignment.center,
-                      ),
-                      TherapistInformationWidget(
-                        title: title,
-                        hospital: hospital,
-                        details: details,
-                        patientsNum: patientsNum,
-                        experience: experience,
-                        numComments: numComments,
-                      ),
-                    ],
-                  ),
-                )))
-      ],
+                      textAlign: TextAlign.center, // Center the text
+                    ),
+                    const SizedBox(height: 10),
+                    RatingStars(
+                      rating: stars, // Replace with dynamic rating if needed
+                      starSize: 30.0, // Example: Custom star size
+                      spacing: 6.0, // Example: Custom spacing between stars
+                      alignment: MainAxisAlignment.center,
+                    ),
+                    TherapistInformationWidget(
+                      title: title,
+                      hospital: hospital,
+                      details: details,
+                      patientsNum: patientsNum,
+                      experience: experience,
+                      numComments: numComments,
+                    ),
+                  ],
+                ),
+              )),
+      bottomNavigationBar: CustomBottomAppBar(),
     );
   }
 }
@@ -162,12 +160,12 @@ class TherapistInformationWidget extends StatelessWidget {
 
   const TherapistInformationWidget(
       {super.key,
-      this.title = 'Therapist',
-      this.hospital = '',
-      this.details = '',
-      this.patientsNum = 0,
-      this.experience = 0,
-      this.numComments = 0});
+        this.title = 'Therapist',
+        this.hospital = '',
+        this.details = '',
+        this.patientsNum = 0,
+        this.experience = 0,
+        this.numComments = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -177,11 +175,11 @@ class TherapistInformationWidget extends StatelessWidget {
       padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment:
-            CrossAxisAlignment.start, // Align content to the start
+        CrossAxisAlignment.start, // Align content to the start
         children: [
           Row(
             mainAxisAlignment:
-                MainAxisAlignment.spaceAround, // Space buttons evenly
+            MainAxisAlignment.spaceAround, // Space buttons evenly
             children: [
               Expanded(
                 child: ElevatedButton(
@@ -194,7 +192,7 @@ class TherapistInformationWidget extends StatelessWidget {
                         vertical: 15), // Vertical padding
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(10), // Rounded corners
+                      BorderRadius.circular(10), // Rounded corners
                     ),
                     backgroundColor: Colors.blue, // Button color
                   ),
@@ -213,7 +211,7 @@ class TherapistInformationWidget extends StatelessWidget {
                         vertical: 15), // Vertical padding
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(10), // Rounded corners
+                      BorderRadius.circular(10), // Rounded corners
                     ),
                     backgroundColor: Colors.blueAccent, // Button color
                   ),

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../widgets/star_rating.dart';
 
+import '../appstate.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback onTherapistSelected; // Callback for therapist selection
+
+  const HomePage({super.key, required this.onTherapistSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   const _DiseaseWidget(),
                   const SizedBox(height: 12,),
-                  const _TherapistWidget(), // Add the TherapistWidget here
+                  _TherapistWidget(onTherapistSelected: onTherapistSelected,), // Add the TherapistWidget here
                 ],
               )),
         ),
@@ -219,7 +222,10 @@ class _DiseaseWidget extends StatelessWidget {
 }
 
 class _TherapistWidget extends StatelessWidget {
-  const _TherapistWidget({super.key});
+  final VoidCallback onTherapistSelected; // Callback for handling card click
+
+  const _TherapistWidget({super.key, required this.onTherapistSelected});
+
 
   @override
   Widget build(BuildContext context) {
@@ -236,9 +242,19 @@ class _TherapistWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        _TherapistCard(name: "John Doe", rating: 5, imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe'),
+        _TherapistCard(
+          name: "John Doe",
+          rating: 5,
+          imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+          onPressed: onTherapistSelected,
+        ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        _TherapistCard(name: "John Doe", rating: 5, imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe')
+        _TherapistCard(
+            name: "John Doe",
+            rating: 5,
+            imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+            onPressed: onTherapistSelected,
+        )
       ],
     );
   }
@@ -248,12 +264,14 @@ class _TherapistCard extends StatelessWidget {
   final String name;
   final double rating;
   final String imageUrl;
+  final VoidCallback onPressed; // New callback
 
   const _TherapistCard({
+    super.key,
     required this.name,
     required this.rating,
     required this.imageUrl,
-    super.key,
+    required this.onPressed,
   });
 
   @override
@@ -267,7 +285,8 @@ class _TherapistCard extends StatelessWidget {
 
     return OutlinedButton(
       onPressed: () {
-        print('$name profile pressed');
+        onPressed(); // Call the provided onPressed callback
+        AppState().toShowNavFalse(); // Call to hide the navigation
       },
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.zero,
