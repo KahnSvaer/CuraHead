@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../controllers/navigation_controller.dart';
+
 class CustomHeadingBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
@@ -15,7 +17,7 @@ class CustomHeadingBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
-          Navigator.pop(context); // Go back to the previous screen
+          NavigationController.goBack(context);
         },
       ),
       title: Text(

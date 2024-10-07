@@ -6,7 +6,6 @@ import 'home.dart';
 import 'chat.dart';
 import 'assessment.dart';
 import 'settings.dart';
-import 'therapist_intro.dart';
 
 import '../widgets/custom_bottom_navigator.dart';
 
@@ -28,21 +27,11 @@ class BackGroundPageState extends State<BackGroundPage> {
 
     // Initialize the _pages list here
     _pages.addAll([
-      HomePage(onTherapistSelected: _navigateToTherapistPage),
+      const HomePage(),
       const ChatPage(),
       const AssessmentPage(),
       const SettingsPage(),
     ]);
-  }
-
-  // Method to navigate to the TherapistIntroPage
-  void _navigateToTherapistPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const TherapistIntroPage(), // Pass any necessary parameters here
-      ),
-    );
   }
 
   @override

@@ -24,7 +24,6 @@ class AppState {
     }
   }
 
-  // Getter for the toShowNav ValueNotifier
   ValueNotifier<bool> get toShowNavNotifier {
     return _toShowNav;
   }

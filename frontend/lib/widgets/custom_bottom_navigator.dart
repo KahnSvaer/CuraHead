@@ -65,7 +65,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
         // Determine the color based on selection and toShow state
         Color containerColor = (isSelectedIndex && toShow) // Selected and toShow is true
             ? Colors.white30
-            : (isPressedIndex && !toShow) // Pressed but not showing
+            : (isPressedIndex) // Pressed but not showing
             ? Colors.white12
             : Colors.transparent; // Default color
 

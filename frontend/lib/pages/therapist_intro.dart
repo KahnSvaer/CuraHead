@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/heading_bar.dart';
 import '../widgets/star_rating.dart';
 import '../widgets/custom_bottom_navigator.dart';

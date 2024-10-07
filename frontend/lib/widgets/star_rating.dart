@@ -35,7 +35,7 @@ class RatingStars extends StatelessWidget {
         ...stars, // Spread the stars into the Row
         const SizedBox(width: 4), // Space between stars and the rating text
         Text(
-          '${rating.toStringAsFixed(1)}', // Display the rating number
+          rating.toStringAsFixed(1), // Display the rating number
           style: TextStyle(
             fontSize: 0.7*starSize,
             color: Colors.black,
