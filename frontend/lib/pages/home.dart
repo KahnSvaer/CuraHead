@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../widgets/therapist_search_card_button.dart';
 
+import '../controllers/navigation_controller.dart';
+
+import 'disease.dart';
+
 class HomePage extends StatelessWidget {
 
   const HomePage({super.key});
@@ -142,7 +146,7 @@ class _DiseaseGrid extends StatelessWidget {
 
     return OutlinedButton(
       onPressed: () {
-        print('$label pressed');
+        NavigationController.navigateToPage(context, DiseasePage(diseaseName: label));
       },
       style: OutlinedButton.styleFrom(
         side: BorderSide(
