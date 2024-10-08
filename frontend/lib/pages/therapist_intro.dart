@@ -34,48 +34,60 @@ class TherapistIntroPage extends StatelessWidget {
       appBar: const CustomHeadingBar(
         title: 'Therapist',
       ),
-      body: Container(
-              color: const Color(0xfff4f6ff),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20), // Space below the app bar
-
-                    const TherapistImageWidget(
-                      imageUrl: '',
-                      widthPercentage: 50,
-                      heightPercentage: 50,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center, // Center the text
-                    ),
-                    const SizedBox(height: 10),
-                    RatingStars(
-                      rating: stars, // Replace with dynamic rating if needed
-                      starSize: 30.0, // Example: Custom star size
-                      spacing: 6.0, // Example: Custom spacing between stars
-                      alignment: MainAxisAlignment.center,
-                    ),
-                    TherapistInformationWidget(
-                      title: title,
-                      hospital: hospital,
-                      details: details,
-                      patientsNum: patientsNum,
-                      experience: experience,
-                      numComments: numComments,
-                    ),
-                  ],
-                ),
-              )),
       bottomNavigationBar: CustomBottomAppBar(),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Container(
+                    width: double.infinity,
+                    color: const Color(0xfff4f6ff), // Outer blue container
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20), // Space below the app bar
+                        const TherapistImageWidget(
+                          imageUrl: '',
+                          widthPercentage: 50,
+                          heightPercentage: 50,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.center, // Center the text
+                        ),
+                        const SizedBox(height: 10),
+                        RatingStars(
+                          rating: stars, // Replace with dynamic rating if needed
+                          starSize: 30.0, // Example: Custom star size
+                          spacing: 6.0, // Example: Custom spacing between stars
+                          alignment: MainAxisAlignment.center,
+                        ),
+                        TherapistInformationWidget(
+                          title: title,
+                          hospital: hospital,
+                          details: details,
+                          patientsNum: patientsNum,
+                          experience: experience,
+                          numComments: numComments,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        )
+      )
     );
   }
 }
@@ -170,7 +182,7 @@ class TherapistInformationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Expanded(child: Container(
       color: Colors.white, // Background color
       margin: EdgeInsets.all(20),
       padding: EdgeInsets.all(20),
@@ -264,7 +276,7 @@ class TherapistInformationWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
