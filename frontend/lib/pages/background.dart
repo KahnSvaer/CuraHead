@@ -5,7 +5,7 @@ import '../appstate.dart';
 import 'home.dart';
 import 'chat.dart';
 import 'assessment.dart';
-import 'settings.dart';
+import 'profile.dart';
 
 import '../widgets/custom_bottom_navigator.dart';
 
@@ -30,7 +30,7 @@ class BackGroundPageState extends State<BackGroundPage> {
       const HomePage(),
       const ChatPage(),
       const AssessmentPage(),
-      const SettingsPage(),
+      const ProfilePage(),
     ]);
   }
 

@@ -29,7 +29,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
               _buildIconContainer(Icons.home_outlined, 'Home', toShow),
               _buildIconContainer(Icons.chat_outlined, 'Chats', toShow),
               _buildIconContainer(Icons.school_outlined, 'Assessment', toShow),
-              _buildIconContainer(Icons.settings_outlined, 'Settings', toShow),
+              _buildIconContainer(Icons.person_outline_rounded, 'Profile', toShow),
             ],
           ),
         );
@@ -46,7 +46,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
         return 1;
       case 'Assessment':
         return 2;
-      case 'Settings':
+      case 'Profile':
         return 3;
       default:
         return 0;
@@ -106,7 +106,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
                     size: 30,
                     color: Colors.white,
                   ),
-                  const SizedBox(height: 2),
+                  // const SizedBox(height: 2),
                   Text(
                     label,
                     style: const TextStyle(

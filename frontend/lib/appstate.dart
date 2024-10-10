@@ -13,7 +13,7 @@ class AppState {
   }
 
   // Private variables
-  final ValueNotifier<int> _selectedPageIndex = ValueNotifier(0);
+  final ValueNotifier<int> _selectedPageIndex = ValueNotifier(3);
   final ValueNotifier<bool> _toShowNav = ValueNotifier(true);
 
   ValueNotifier<int> get selectedPageIndexNotifier => _selectedPageIndex;
