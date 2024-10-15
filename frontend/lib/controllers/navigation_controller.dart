@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../appstate.dart';
+import '../StateManagement/appstate.dart';
 
 class NavigationController {
   static void navigateToPage(BuildContext context, Widget page) {
