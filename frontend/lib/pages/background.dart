@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../StateManagement/appstate.dart';
 import 'home.dart';
-import 'chat.dart';
+import 'search.dart';
 import 'assessment.dart';
 import 'profile.dart';
 import '../widgets/custom_bottom_navigator.dart';
@@ -15,7 +15,7 @@ class BackGroundPage extends StatelessWidget {
     // List of pages to navigate between
     final List<Widget> _pages = [
       const HomePage(),
-      const ChatPage(),
+      const TherapistPage(),
       const AssessmentPage(),
       const ProfilePage(),
     ];

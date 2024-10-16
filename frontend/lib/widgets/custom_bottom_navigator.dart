@@ -27,7 +27,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space items evenly
             children: [
               _buildIconContainer(Icons.home_outlined, 'Home', toShow),
-              _buildIconContainer(Icons.chat_outlined, 'Chats', toShow),
+              _buildIconContainer(Icons.search_off_outlined, 'Therapists', toShow),
               _buildIconContainer(Icons.school_outlined, 'Assessment', toShow),
               _buildIconContainer(Icons.person_outline_rounded, 'Profile', toShow),
             ],
@@ -42,7 +42,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
     switch (label) {
       case 'Home':
         return 0;
-      case 'Chats':
+      case 'Therapists':
         return 1;
       case 'Assessment':
         return 2;

@@ -216,7 +216,7 @@ class _Graph extends StatelessWidget {
         return AspectRatio(
           aspectRatio: aspectRatio, // Maintains the aspect ratio
           child: Container(
-            margin: const EdgeInsets.all(16.0),
+            margin: const EdgeInsets.all(18.0),
             width: double.infinity, // Expands to the full width of the screen
             color: Colors.blueAccent, // Placeholder for the graph
             child: Center(
@@ -242,7 +242,7 @@ class _AppointmentsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.all(18.0),
       child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start, // Align content to the left
@@ -259,7 +259,7 @@ class _AppointmentsBar extends StatelessWidget {
           const TherapistCard(
             name: "John Doe",
             rating: 5,
-            imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+            imageUrl: '',
           ),
         ],
       ),

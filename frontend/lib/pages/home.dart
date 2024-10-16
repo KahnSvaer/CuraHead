@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/therapist_search_card_button.dart';
+import '../widgets/search_bar.dart';
 
 import '../controllers/navigation_controller.dart';
 
@@ -78,30 +79,7 @@ class _WelcomeBar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15), // Space between profile and search bar
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search Therapist',
-                alignLabelWithHint: true,
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 7.5),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search,
-                      color: Colors.grey), // Search icon as a button
-                  onPressed: () {
-                    print("Searching");
-                  },
-                ), // Search icon on the right
-              ),
-            ),
-          ),
+          const SearchWidget(),
         ],
       ),
     );
@@ -243,18 +221,19 @@ class _TherapistWidget extends StatelessWidget {
         TherapistCard(
           name: "John Doe",
           rating: 5,
-          imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+          imageUrl: '',
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
         TherapistCard(
             name: "John Doe",
             rating: 5,
-            imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+            imageUrl: '',
         )
       ],
     );
   }
 
 }
+
 
 

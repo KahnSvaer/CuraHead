@@ -1,32 +1,28 @@
+import 'package:curahead_app/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
 
-import 'star_rating.dart';
-
 import '../controllers/navigation_controller.dart';
-
 import '../pages/therapist_intro.dart';
-
 
 class TherapistCard extends StatelessWidget {
   final String name;
   final double rating;
   final String imageUrl;
+  final String qualification;
 
   const TherapistCard({
     super.key,
     required this.name,
     required this.rating,
     required this.imageUrl,
+    this.qualification = 'PHD',
   });
 
   @override
   Widget build(BuildContext context) {
-    // Get the height of the screen
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // Set height ratio for image and card
-    final double imageHeight = screenHeight * 0.11; // 11% of screen height
-    final double cardHeight = imageHeight; // Card height including padding
+    final double imageHeight = screenHeight * 0.11; // Reduced image height
+    final double cardHeight = imageHeight;
 
     return OutlinedButton(
       onPressed: () {
@@ -35,25 +31,24 @@ class TherapistCard extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // Rounded edges
+          borderRadius: BorderRadius.circular(12),
         ),
         backgroundColor: Colors.white,
       ),
       child: SizedBox(
-        height: cardHeight, // Set the card height
+        height: cardHeight,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Therapist Image with Placeholder Icon
             ClipRRect(
-              borderRadius: BorderRadius.circular(12), // Rounded corners for image
-              child: SizedBox(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
                 height: imageHeight,
-                width: imageHeight, // Make width same as height for square image/icon
-                child: _buildImage(imageUrl, imageHeight), // Use the new image builder
+                width: imageHeight,
+                margin: EdgeInsets.all(5),
+                child: _buildCircularImage(imageUrl, imageHeight),
               ),
             ),
-            const SizedBox(width: 10), // Space between image and text
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -67,13 +62,19 @@ class TherapistCard extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 5), // Space between name and rating
-                  // Using the RatingStars widget here
+                  Text(
+                    qualification,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                    ),
+                  ),
                   RatingStars(
                     rating: rating,
-                    starSize: 16.0, // Size of each star
-                    spacing: 4.0, // Space between stars
-                    alignment: MainAxisAlignment.start, // Align stars to the left
+                    starSize: 16.0,
+                    spacing: 4.0,
+                    alignment: MainAxisAlignment.start,
                   ),
                 ],
               ),
@@ -84,30 +85,35 @@ class TherapistCard extends StatelessWidget {
     );
   }
 
-  // Method to create the therapist image with error handling and placeholder
-  Widget _buildImage(String url, double size) {
-    return Image.network(
-      url,
-      height: size, // Set the image height
-      width: size, // Set the image width to match the height for a square
-      fit: BoxFit.cover,
-      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-        // Show default person icon in case of error or empty URL
-        return Icon(
-          Icons.person,
-          size: size, // Resize to match the height and width of the container
-          color: Colors.grey,
-        );
-      },
-      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-        // Show default person icon while the image is loading
-        if (loadingProgress == null) return child;
-        return Icon(
-          Icons.person,
-          size: size, // Resize to match the height of the container
-          color: Colors.grey, // Optional: color for the icon
-        );
-      },
+  Widget _buildCircularImage(String url, double size) {
+    return CircleAvatar(
+      radius: size / 2, // Reduced circle size
+      backgroundColor: Colors.grey[200],
+      child: ClipOval(
+        child: Image.network(
+          url,
+          height: size,
+          width: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(
+              Icons.person,
+              size: size * 0.8,
+              color: Colors.grey,
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child; // Show image once fully loaded
+            return Center(
+              child: Icon(
+                Icons.person,
+                size: size * 0.8,
+                color: Colors.grey,
+              ), // Show icon while image is loading
+            );
+          },
+        ),
+      ),
     );
   }
 }
