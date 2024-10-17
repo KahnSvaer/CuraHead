@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../StateManagement/appstate.dart';
 
+import '../pages/background.dart';
+
 class CustomBottomAppBar extends StatefulWidget {
   const CustomBottomAppBar({
     super.key,
@@ -74,7 +76,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
             onTap: () {
               AppState().selectedPageIndex = index;
               AppState().toShowNavTrue();
-              _popToRoot(context);
+              _popToBackground(context);
             },
             onTapDown: (_) {
               setState(() {
@@ -124,7 +126,9 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
     );
   }
 
-  void _popToRoot(BuildContext context) {
-    Navigator.of(context).popUntil((route) => route.isFirst);
+  void _popToBackground(BuildContext context) {
+    Navigator.of(context).popUntil((route){
+      return route is MaterialPageRoute && route.builder(context) is BackGroundPage;
+    });
   }
 }

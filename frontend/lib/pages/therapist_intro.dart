@@ -187,48 +187,75 @@ class TherapistInformationWidget extends StatelessWidget {
       margin: EdgeInsets.all(20),
       padding: EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start, // Align content to the start
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment:
-            MainAxisAlignment.spaceAround, // Space buttons evenly
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
-                child: ElevatedButton(
+                child: TextButton(
                   onPressed: () {
-                    // Add functionality for the first button
                     print('Button 1 pressed');
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15), // Vertical padding
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
-                    ),
-                    backgroundColor: Colors.blue, // Button color
-                  ),
-                  child: const Text('Button 1'),
-                ),
-              ),
-              const SizedBox(width: 10), // Space between buttons
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Add functionality for the second button
-                    print('Button 2 pressed');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15), // Vertical padding
+                  style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius:
                       BorderRadius.circular(10), // Rounded corners
                     ),
                     backgroundColor: Colors.blueAccent, // Button color
                   ),
-                  child: const Text('Button 2'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.chat_bubble_outline, // Chatting icon
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      SizedBox(width: 8), // Space between icon and text
+                      Text(
+                        'Chat',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10), // Space between buttons
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    // Add functionality for the second button
+                    print('Button 2 pressed');
+                  },
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(10), // Rounded corners
+                    ),
+                    backgroundColor: Colors.blueAccent, // Button color
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.event_available_outlined, // Booking icon
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      SizedBox(width: 8), // Space between icon and text
+                      Text(
+                        'Book',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18
+                        ), // Text color
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

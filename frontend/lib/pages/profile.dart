@@ -97,17 +97,17 @@ class _ModifiedWelcomeBar extends StatelessWidget {
                       SizedBox(
                         width: 100,
                       ),
-                      _GraphIndicatorOutlinedButton(
+                      _GraphIndicatorButton(
                           selectedNotifier: graphNum,
                           index: 0,
-                          text: "Option 1"),
+                          text: "Feature 1"),
                       SizedBox(
                         width: 10,
                       ),
-                      _GraphIndicatorOutlinedButton(
+                      _GraphIndicatorButton(
                           selectedNotifier: graphNum,
                           index: 1,
-                          text: "Option 2"),
+                          text: "Feature 2"),
                     ],
                   ),
                 ),
@@ -160,12 +160,12 @@ class _ModifiedWelcomeBar extends StatelessWidget {
   }
 }
 
-class _GraphIndicatorOutlinedButton extends StatelessWidget {
+class _GraphIndicatorButton extends StatelessWidget {
   final ValueNotifier<int> selectedNotifier;
   final int index;
   final String text;
 
-  const _GraphIndicatorOutlinedButton({
+  const _GraphIndicatorButton({
     required this.selectedNotifier,
     required this.index,
     required this.text,
@@ -177,11 +177,12 @@ class _GraphIndicatorOutlinedButton extends StatelessWidget {
       child: ValueListenableBuilder<int>(
         valueListenable: selectedNotifier,
         builder: (context, value, child) {
-          return OutlinedButton(
+          return TextButton(
             onPressed: () {
               selectedNotifier.value = index; // Update the selected index
             },
-            style: OutlinedButton.styleFrom(
+            style: TextButton.styleFrom(
+              fixedSize: Size.fromHeight(20),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -191,6 +192,7 @@ class _GraphIndicatorOutlinedButton extends StatelessWidget {
             ),
             child: Text(
               text,
+              textAlign: TextAlign.center,
             ),
           );
         },

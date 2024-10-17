@@ -1,6 +1,5 @@
 import 'package:curahead_app/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
-
 import '../controllers/navigation_controller.dart';
 import '../pages/therapist_intro.dart';
 
@@ -24,11 +23,11 @@ class TherapistCard extends StatelessWidget {
     final double imageHeight = screenHeight * 0.11; // Reduced image height
     final double cardHeight = imageHeight;
 
-    return OutlinedButton(
+    return TextButton(
       onPressed: () {
         NavigationController.navigateToPage(context, TherapistIntroPage());
       },
-      style: OutlinedButton.styleFrom(
+      style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -90,30 +89,45 @@ class TherapistCard extends StatelessWidget {
       radius: size / 2, // Reduced circle size
       backgroundColor: Colors.grey[200],
       child: ClipOval(
-        child: Image.network(
-          url,
-          height: size,
-          width: size,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(
-              Icons.person,
-              size: size * 0.8,
-              color: Colors.grey,
-            );
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child; // Show image once fully loaded
-            return Center(
-              child: Icon(
+        child: FutureBuilder<ImageProvider>(
+          future: _getImageProvider(url),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show icon while image is loading
+              return Center(
+                child: Icon(
+                  Icons.person,
+                  size: size * 0.8,
+                  color: Colors.grey,
+                ),
+              );
+            } else if (snapshot.hasError || snapshot.data == null || url == '') {
+              // Show icon in case of error or empty URL
+              return Icon(
                 Icons.person,
                 size: size * 0.8,
                 color: Colors.grey,
-              ), // Show icon while image is loading
-            );
+              );
+            } else {
+              // Show image when it's fully loaded
+              return Image(
+                image: snapshot.data!,
+                height: size,
+                width: size,
+                fit: BoxFit.cover,
+              );
+            }
           },
         ),
       ),
     );
+  }
+
+  Future<ImageProvider> _getImageProvider(String url) async {
+    try {
+      return NetworkImage(url);
+    } catch (e) {
+      throw Exception('Image loading failed');
+    }
   }
 }

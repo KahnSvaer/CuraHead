@@ -31,6 +31,7 @@ class SearchWidget extends StatelessWidget{
                 color: Colors.grey), // Search icon as a button
             onPressed: () {
               AppState().selectedPageIndex = 1;
+              AppState().toShowNavTrue();
             },
           ), // Search icon on the right
         ),

@@ -10,7 +10,7 @@ class TherapistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int page_amt = 20;
+    int pageAmt = 8;
     return Column(
       children: [
         Container(
@@ -32,7 +32,7 @@ class TherapistPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: List.generate(page_amt, (index) {
+                    children: List.generate(pageAmt, (index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: const TherapistCard(
