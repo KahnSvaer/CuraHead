@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:curahead_app/firebase_options.dart';
 import 'package:provider/provider.dart';
 
 import 'StateManagement/providerState.dart';
 import 'pages/background.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // Auto-generated from Firebase console
+  );
   runApp(MyApp());
 }
 
