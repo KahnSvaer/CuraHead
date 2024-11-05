@@ -1,4 +1,9 @@
+import 'package:curahead_app/entities/assessment.dart';
 import 'package:flutter/material.dart';
+
+import '../controllers/navigation_controller.dart';
+
+import 'question.dart';
 
 class AssessmentPage extends StatelessWidget {
   const AssessmentPage({super.key});
@@ -6,7 +11,11 @@ class AssessmentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Assessment Page'),
+      child: OutlinedButton(
+          onPressed: () {
+            NavigationController.navigateToPage(context, QuestionPage(question: Question(questionText: "Are you sleeping well", options: ["True","False"]),)); //Dummy question
+          },
+          child: Text("Exam 1")),
     );
   }
 }

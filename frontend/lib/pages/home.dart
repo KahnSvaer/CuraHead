@@ -1,4 +1,12 @@
+import 'package:curahead_app/entities/therapist.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/therapist_card.dart';
+import '../widgets/search_bar.dart';
+
+import '../controllers/navigation_controller.dart';
+
+import 'disease.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,12 +20,12 @@ class HomePage extends StatelessWidget {
           child: Container(
               color: const Color(0xfff4f6ff),
               padding:
-              const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   const _DiseaseWidget(),
-                  const SizedBox(height: 12,),
+                  // const SizedBox(height: 12,),
                   const _TherapistWidget(), // Add the TherapistWidget here
                 ],
               )),
@@ -27,7 +35,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Custom Widgets Used
 class _WelcomeBar extends StatelessWidget {
   const _WelcomeBar({super.key});
 
@@ -50,21 +57,21 @@ class _WelcomeBar extends StatelessWidget {
               const SizedBox(width: 10), // Space between profile and text
               Column(
                 crossAxisAlignment:
-                CrossAxisAlignment.start, // Align the text to the left
+                    CrossAxisAlignment.start, // Align the text to the left
                 children: const [
                   Text(
                     'Welcome',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
                   ),
                   Text(
                     '[Profile Name]',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -72,30 +79,7 @@ class _WelcomeBar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15), // Space between profile and search bar
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search Therapist',
-                alignLabelWithHint: true,
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 7.5),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search,
-                      color: Colors.grey), // Search icon as a button
-                  onPressed: () {
-                    print("Searching");
-                  },
-                ), // Search icon on the right
-              ),
-            ),
-          ),
+          const SearchWidget(),
         ],
       ),
     );
@@ -116,40 +100,34 @@ class _DiseaseGrid extends StatelessWidget {
       // Horizontal space between buttons
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        _buildOutlinedButton(context, Icons.medical_information, 'ADHD'),
-        _buildOutlinedButton(context, Icons.mood, 'Anxiety'),
-        _buildOutlinedButton(
-            context, Icons.sentiment_very_dissatisfied, 'Depression'),
-        _buildOutlinedButton(context, Icons.health_and_safety, 'PTSD'),
-        _buildOutlinedButton(context, Icons.psychology, 'OCD'),
-        _buildOutlinedButton(context, Icons.emoji_people, 'Bipolar'),
+        _buildButton(context, Icons.medical_information, 'Depression'),
+        _buildButton(context, Icons.mood, 'Anxiety'),
+        _buildButton(context, Icons.sentiment_very_dissatisfied, 'PTSD'),
+        _buildButton(context, Icons.health_and_safety, 'Substance Abuse'),
+        _buildButton(context, Icons.psychology, 'ADHD'),
+        _buildButton(context, Icons.emoji_people, 'Specific Phobias'),
       ],
     );
   }
 
-  Widget _buildOutlinedButton(BuildContext context, IconData icon, String label) {
-    final Color outlineColor = Colors.black;
-    final double outlineWidth = 1;
+  Widget _buildButton(BuildContext context, IconData icon, String label) {
 
     final Color textColor = Colors.black;
     final double textFontSize = 10;
 
     final double iconSize = 50;
 
-    final Color buttonColor = Colors.white;
-
-    return OutlinedButton(
+    return TextButton(
       onPressed: () {
-        print('$label pressed');
+        NavigationController.navigateToPage(
+            context, DiseasePage(diseaseName: label));
       },
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-            color: outlineColor, width: outlineWidth), // Border color and width
-        padding: EdgeInsets.zero,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        backgroundColor: Colors.white, // Button background color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12), // Rounded edges
         ),
-        backgroundColor: buttonColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -161,6 +139,7 @@ class _DiseaseGrid extends StatelessWidget {
           SizedBox(height: 3), // Space between icon and text
           Text(
             label,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: textColor,
               fontSize: textFontSize,
@@ -179,40 +158,40 @@ class _DiseaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Diseases', // Directly using Text for "Diseases"
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    print("See All Pressed");
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.grey, // Text color
-                    backgroundColor: Colors.transparent, // Button background color
-                  ),
-                  child: Text(
-                    'Show All',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green, // Text color for "See All"
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              'Categories',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
-            const SizedBox(height: 0), // Add a smaller spacing here
-            const Expanded(child: _DiseaseGrid()),
+            TextButton(
+              onPressed: () {
+                print("See All Pressed");
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey, // Text color
+                backgroundColor: Colors.transparent, // Button background color
+              ),
+              child: Text(
+                'Show All',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.green, // Text color for "See All"
+                ),
+              ),
+            ),
           ],
-        ));
+        ),
+        const SizedBox(height: 0), // Add a smaller spacing here
+        const Expanded(child: _DiseaseGrid()),
+      ],
+    ));
   }
 }
 
@@ -226,7 +205,7 @@ class _TherapistWidget extends StatelessWidget {
       children: [
         // Heading for the Therapist section
         const Text(
-          'Therapists',
+          'Top Therapists',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -234,101 +213,14 @@ class _TherapistWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        _TherapistCard(name: "John Doe", rating: 5, imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe'),
+        TherapistCard(
+          therapist: Therapist.withId('1234'),
+        ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        _TherapistCard(name: "John Doe", rating: 5, imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe')
+        TherapistCard(
+          therapist: Therapist.withId('1234'),
+        ),
       ],
     );
   }
 }
-
-class _TherapistCard extends StatelessWidget {
-  final String name;
-  final double rating;
-  final String imageUrl;
-
-  const _TherapistCard({
-    required this.name,
-    required this.rating,
-    required this.imageUrl,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Get the height of the screen
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // Set height ratio for image and card
-    final double imageHeight = screenHeight * 0.11; // 15% of screen height
-    final double cardHeight = imageHeight; // Card height including padding
-
-    return OutlinedButton(
-      onPressed: () {
-        print('$name profile pressed');
-      },
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // Rounded edges
-        ),
-        backgroundColor: Colors.white,
-      ),
-      child: SizedBox(
-        height: cardHeight, // Set the card height
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Therapist Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12), // Rounded corners for image
-              child: Image.network(
-                height: imageHeight, // Set the image height
-                imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 10), // Space between image and text
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dr $name',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 5), // Space between name and rating
-                  _buildRatingBar(rating), // Build the star rating
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Method to create the star rating bar
-  Widget _buildRatingBar(double rating) {
-    int starCount = rating.toInt(); // Integer part for full stars
-    double halfStar = rating - starCount >= 0.5 ? 1.0 : 0.0; // Check if there's a half star
-    List<Widget> stars = List.generate(5, (index) {
-      if (index < starCount) {
-        return const Icon(Icons.star, color: Colors.amber, size: 16);
-      } else if (index == starCount && halfStar == 1.0) {
-        return const Icon(Icons.star_half, color: Colors.amber, size: 16);
-      } else {
-        return const Icon(Icons.star_border, color: Colors.amber, size: 16);
-      }
-    });
-
-    return Row(children: stars);
-  }
-}
-
-
