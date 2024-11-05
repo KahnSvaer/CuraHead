@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../StateManagement/appstate.dart';
+import '../entities/therapist.dart';
 import '../widgets/search_bar.dart';
 
-import '../widgets/therapist_search_card_button.dart';
+import '../widgets/therapist_card.dart';
 
 class TherapistPage extends StatelessWidget {
   const TherapistPage({super.key});
@@ -35,8 +35,9 @@ class TherapistPage extends StatelessWidget {
                     children: List.generate(pageAmt, (index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: const TherapistCard(
-                            name: "John Doe", rating: 5, imageUrl: ""),
+                        child: TherapistCard(
+                            therapist: Therapist.withId("1234"),
+                        )
                       );
                     }),
                   ),

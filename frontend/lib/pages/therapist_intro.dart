@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../entities/therapist.dart';
 import '../widgets/heading_bar.dart';
 import '../widgets/star_rating.dart';
 import '../widgets/custom_bottom_navigator.dart';
 
 class TherapistIntroPage extends StatelessWidget {
-  final String name;
-  final String therapistID;
-  final double stars;
-  final String title;
-  final String hospital;
-  final String details;
-  final int patientsNum;
-  final int experience;
-  final int numComments;
+  final Therapist therapist;
 
   const TherapistIntroPage({
     super.key,
-    this.therapistID = '123',
-    this.stars = 5,
-    this.name = 'Dr John Doe',
-    this.title = 'Therapist',
-    this.hospital = 'ABC Hospital, New Delhi',
-    this.details = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lobortis, enim quis vestibulum commodo, libero sapien luctus mi, ut imperdiet velit augue at dui. Proin faucibus suscipit purus. Nam commodo, augue sit amet venenatis porttitor, ipsum odio dictum enim, id auctor lacus magna sed urna. Nulla facilisi. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis tincidunt convallis libero malesuada dictum. Fusce at posuere erat.\n\nNunc volutpat lacinia felis, vestibulum laoreet leo semper quis. Curabitur nec ultricies odio. Morbi et ligula ut ante blandit hendrerit. Vestibulum tincidunt dapibus diam nec consectetur. Nam ornare erat turpis, eu commodo turpis faucibus vel. Nullam maximus tellus ac hendrerit molestie. Morbi rhoncus justo in metus dictum blandit. Aenean nec ipsum ut dui congue tempor. Nullam accumsan a odio ac dapibus. Ut vitae pretium lacus. Phasellus tempor vehicula mauris sed porta. Sed nibh nulla, porta et rutrum eget, pretium id leo.',
-    this.patientsNum = 0,
-    this.experience = 0,
-    this.numComments = 0,
+    required this.therapist,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String name = therapist.displayName;
+    final double stars = therapist.rating;
+    final String title = therapist.qualifications;
+    final String hospital = therapist.hospital;
+    final String details = therapist.details;
+    final int patientsNum = therapist.patientsNum;
+    final int experience = therapist.experience;
+    final int numComments = therapist.numComments;
+    final String imageURL = therapist.imageURL;
     return Scaffold(
       appBar: const CustomHeadingBar(
         title: 'Therapist',
@@ -49,8 +43,8 @@ class TherapistIntroPage extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20), // Space below the app bar
-                        const TherapistImageWidget(
-                          imageUrl: '',
+                        TherapistImageWidget(
+                          imageUrl: imageURL,
                           widthPercentage: 50,
                           heightPercentage: 50,
                         ),

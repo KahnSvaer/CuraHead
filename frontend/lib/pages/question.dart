@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../widgets/custom_bottom_navigator.dart';
 import '../widgets/heading_bar.dart';
+import '../entities/assessment.dart';
 
 class QuestionPage extends StatelessWidget {
   final int num;
-  final String questionText;
-  final List<String> options;
+  final Question question;
+
 
   const QuestionPage({
     super.key,
     this.num = 1,
-    this.questionText =
-        "Have you recently been feeling perfectly well and in good health?",
-    this.options = const ["True", "False"],
+    required this.question,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String questionText = question.questionText;
+    final List<String> options = question.options;
     return Scaffold(
       appBar: CustomHeadingBar(title: 'Assessment'),
       bottomNavigationBar: CustomBottomAppBar(),

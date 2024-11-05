@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../entities/therapist.dart';
 import '../widgets/custom_bottom_navigator.dart';
 import '../widgets/heading_bar.dart';
-import '../widgets/therapist_search_card_button.dart';
+import '../widgets/therapist_card.dart';
 
 class DiseasePage extends StatelessWidget {
   final String diseaseName;
@@ -126,16 +127,12 @@ class _TherapistListWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        const TherapistCard(
-          name: "John Doe",
-          rating: 5,
-          imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+        TherapistCard(
+          therapist: Therapist.withId("1234"),
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
-        const TherapistCard(
-          name: "John Doe",
-          rating: 5,
-          imageUrl: 'https://via.placeholder.com/100.png?text=John+Doe',
+        TherapistCard(
+          therapist: Therapist.withId("1234"),
         ),
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:curahead_app/entities/assessment.dart';
 import 'package:flutter/material.dart';
 
 import '../controllers/navigation_controller.dart';
@@ -12,7 +13,7 @@ class AssessmentPage extends StatelessWidget {
     return Center(
       child: OutlinedButton(
           onPressed: () {
-            NavigationController.navigateToPage(context, QuestionPage());
+            NavigationController.navigateToPage(context, QuestionPage(question: Question(questionText: "Are you sleeping well", options: ["True","False"]),)); //Dummy question
           },
           child: Text("Exam 1")),
     );

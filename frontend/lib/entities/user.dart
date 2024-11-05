@@ -1,49 +1,57 @@
 enum UserRole {
   therapist,
-  patient
+  patient,
 }
 
 class User {
-  final String id;
-  final String name;
+  final String uid;
   final String email;
-  final String password;
-  UserRole role; // e.g., 'therapist' or 'client'
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String displayName;
+  final String phoneNumber;
+  final String imageURL;
+  UserRole role;
 
   User({
-    required this.id,
-    required this.name,
+    required this.uid,
     required this.email,
-    required this.password,
-    required this.role,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.displayName,
+    required this.phoneNumber,
+    this.role = UserRole.patient,
+    this.imageURL = 'https://via.placeholder.com/150',
   });
 
-  // Methods for CRUD operations
-  factory User.fromMap(Map<String, dynamic> data) {
+  User.withId(String uid)
+      : this(
+    uid: uid,
+    displayName: 'John Doe',
+    email: '',
+    phoneNumber: '',
+    role: UserRole.therapist,
+    imageURL: 'https://via.placeholder.com/150',
+  );
+
+  factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: data['id'],
-      name: data['name'],
-      email: data['email'],
-      password: data['password'],
-      role: data['role'],
-      createdAt: DateTime.parse(data['createdAt']),
-      updatedAt: DateTime.parse(data['updatedAt']),
+      uid: map['uid'] ?? '',
+      email: map['email'] ?? '',
+      displayName: map['displayName'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+      role: UserRole.values.firstWhere(
+            (e) => e.toString() == 'UserRole.${map['role']}',
+        orElse: () => UserRole.patient,
+      ),
+      imageURL: 'https://via.placeholder.com/150',
     );
   }
 
+
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
+      'uid': uid,
       'email': email,
-      'password': password,
-      'role': role,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'displayName': displayName,
+      'phoneNumber': phoneNumber,
+      'role': role.toString().split('.').last, // Save as string ("therapist" or "patient")
     };
   }
 }

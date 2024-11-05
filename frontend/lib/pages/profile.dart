@@ -1,6 +1,9 @@
+import 'package:curahead_app/widgets/appointment_card.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/therapist_search_card_button.dart';
+import '../entities/appointments.dart';
+import '../entities/therapist.dart';
+import '../entities/user.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -258,10 +261,13 @@ class _AppointmentsBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16.0),
-          const TherapistCard(
-            name: "John Doe",
-            rating: 5,
-            imageUrl: '',
+          AppointmentCard(
+            appointment: Appointment(
+              id: 'appointment789',
+              client: User.withId("123"),
+              therapist: Therapist.withId("123"),
+              appointmentDateTime: DateTime.now().add(Duration(days: 1, hours: 2)), // Appointment for tomorrow at 2 hours later
+            ),
           ),
         ],
       ),

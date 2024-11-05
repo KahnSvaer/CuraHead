@@ -1,31 +1,31 @@
+import 'package:curahead_app/entities/therapist.dart';
 import 'package:curahead_app/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
 import '../controllers/navigation_controller.dart';
 import '../pages/therapist_intro.dart';
 
 class TherapistCard extends StatelessWidget {
-  final String name;
-  final double rating;
-  final String imageUrl;
-  final String qualification;
+  final Therapist therapist;
 
   const TherapistCard({
     super.key,
-    required this.name,
-    required this.rating,
-    required this.imageUrl,
-    this.qualification = 'PHD',
+    required this.therapist,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String name = therapist.displayName;
+    final double rating = therapist.rating;
+    final String imageUrl = therapist.imageURL;
+    final String qualification = therapist.qualifications;
+
     final screenHeight = MediaQuery.of(context).size.height;
     final double imageHeight = screenHeight * 0.11; // Reduced image height
     final double cardHeight = imageHeight;
 
     return TextButton(
       onPressed: () {
-        NavigationController.navigateToPage(context, TherapistIntroPage());
+        NavigationController.navigateToPage(context, TherapistIntroPage(therapist: Therapist.withId("1234"),));
       },
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,

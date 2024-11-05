@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../StateManagement/appstate.dart';
+import '../state_management/appstate.dart';
 
 import '../pages/background.dart';
 

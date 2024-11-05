@@ -1,6 +1,7 @@
+import 'package:curahead_app/entities/therapist.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/therapist_search_card_button.dart';
+import '../widgets/therapist_card.dart';
 import '../widgets/search_bar.dart';
 
 import '../controllers/navigation_controller.dart';
@@ -213,16 +214,12 @@ class _TherapistWidget extends StatelessWidget {
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
         TherapistCard(
-          name: "John Doe",
-          rating: 5,
-          imageUrl: '',
+          therapist: Therapist.withId('1234'),
         ),
         const SizedBox(height: 12), // Space between heading and therapist list
         TherapistCard(
-          name: "John Doe",
-          rating: 5,
-          imageUrl: '',
-        )
+          therapist: Therapist.withId('1234'),
+        ),
       ],
     );
   }
