@@ -1,0 +1,256 @@
+{ "questions_list":
+  [
+    {
+      "question": "Been feeling perfectly well and in good health?",
+      "choices": {
+        "0": "Better than usual",
+        "1": "Same as usual",
+        "2": "Worse than usual",
+        "3": "Much worse than usual"
+      }
+    },
+    {
+      "question": "Been feeling in need of a good tonic?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been feeling run down and out of sorts?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Felt that you are ill?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been getting any pains in your head?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been getting a feeling of tightness or pressure in your head?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been having hot or cold spells?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Lost much sleep over worry?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Had difficulty in staying asleep once you are off?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Felt constantly under strain?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been getting edgy and bad-tempered?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been getting scared or panicky for no good reason?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Found everything getting on top of you?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been feeling nervous and strung-up all the time?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Been managing to keep yourself busy and occupied?",
+      "choices": {
+        "0": "More so than usual",
+        "1": "Same as usual",
+        "2": "Rather less than usual",
+        "3": "Much less than usual"
+      }
+    },
+    {
+      "question": "Been taking longer over the things you do?",
+      "choices": {
+        "0": "Quicker than usual",
+        "1": "Same as usual",
+        "2": "Longer than usual",
+        "3": "Much longer than usual"
+      }
+    },
+    {
+      "question": "Felt on the whole you were doing things well?",
+      "choices": {
+        "0": "Better than usual",
+        "1": "About the same",
+        "2": "Less well than usual",
+        "3": "Much less well"
+      }
+    },
+    {
+      "question": "Been satisfied with the way you've carried out your task?",
+      "choices": {
+        "0": "More satisfied than usual",
+        "1": "About same as usual",
+        "2": "Less satisfied than usual",
+        "3": "Much less satisfied"
+      }
+    },
+    {
+      "question": "Felt that you are playing a useful part in things?",
+      "choices": {
+        "0": "More so than usual",
+        "1": "Same as usual",
+        "2": "Less useful than usual",
+        "3": "Much less useful"
+      }
+    },
+    {
+      "question": "Felt capable of making decisions about things?",
+      "choices": {
+        "0": "More so than usual",
+        "1": "Same as usual",
+        "2": "Less so than usual",
+        "3": "Much less capable"
+      }
+    },
+    {
+      "question": "Been able to enjoy your normal day-to-day activities?",
+      "choices": {
+        "0": "More so than usual",
+        "1": "Same as usual",
+        "2": "Less so than usual",
+        "3": "Much less than usual"
+      }
+    },
+    {
+      "question": "Been thinking of yourself as a worthless person?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Felt that life is entirely hopeless?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Felt that life isn't worth living?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Thought of the possibility that you might make away with yourself?",
+      "choices": {
+        "0": "Definitely not",
+        "1": "I don't think so",
+        "2": "Has crossed my mind",
+        "3": "Definitely have"
+      }
+    },
+    {
+      "question": "Found at times you couldn't do anything because your nerves were too bad?",
+      "choices": {
+        "0": "Not at all",
+        "1": "No more than usual",
+        "2": "Rather more than usual",
+        "3": "Much more than usual"
+      }
+    },
+    {
+      "question": "Found yourself wishing you were dead and away from it all?",
+      "choices": {
+        "0": "Definitely not",
+        "1": "I don't think so",
+        "2": "Has crossed my mind",
+        "3": "Definitely has"
+      }
+    },
+    {
+      "question": "Found that the idea of taking your own life kept coming into your mind?",
+      "choices": {
+        "0": "Definitely not",
+        "1": "I don’t think so",
+        "2": "Has crossed my mind",
+        "3": "Definitely has"
+      }
+    }
+  ]
+}
