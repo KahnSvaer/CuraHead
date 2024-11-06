@@ -23,6 +23,7 @@ dependencies:
 
   # iOS style icons (optional)
   cupertino_icons: ^1.0.8
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -34,5 +35,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true  # Enables the use of Material Icons in the app
   assets:
-    - assets/icons/  # Custom assets like icons
-
+    - assets/icons/ # For icons
+    - assets/data/ # For jsons

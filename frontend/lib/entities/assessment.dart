@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 
 class Question {
@@ -12,7 +11,7 @@ class Question {
   });
 
   // Modify question text, type, or options
-  void modifyQuestion({String? newText,List<String>? newOptions}) {
+  void modifyQuestion({String? newText, List<String>? newOptions}) {
     if (newText != null) questionText = newText;
     if (newOptions != null) options = newOptions;
   }
@@ -25,77 +24,82 @@ class Question {
     };
   }
 
-  // Factory constructor to create a Question from JSON
+  // Create a Question instance from JSON
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
-      questionText: json['questionText'],
-      options: List<String>.from(json['options'] ?? []),
+      questionText: json['question'] ?? 'No question text',
+      options: (json['choices'] as Map<String, dynamic>).values.cast<String>().toList(),  // Convert Map to List<String>
     );
   }
 }
 
-
-
-class Assessment {
+class Exam {
   String name;
+  String jsonPath;
   List<Question> questions = [];
-  int _currentQuestionIndex = 0;
+  int currentQuestionIndex = -1;
 
-  Assessment({required this.name});
+  Exam({required this.name, required this.jsonPath});
 
   // Load questions from a JSON file in assets
-  Future<void> loadQuestionsFromJson(String jsonPath) async {
-    final String jsonString = await rootBundle.loadString(jsonPath);
-    final Map<String, dynamic> jsonData = json.decode(jsonString);
+  Future<void> loadQuestionsFromJson() async {
+    try {
+      final String jsonString = await rootBundle.loadString(jsonPath);
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
 
-    // Parse JSON data into Question instances
-    questions = jsonData.entries.map((entry) {
-      String questionText = entry.key;
-      List<String> options = List<String>.from(entry.value['options'] ?? []);
-      return Question(
-        questionText: questionText,
-        options: options,
-      );
-    }).toList();
-  }
-
-  // Modify a specific question by index
-  void modifyQuestion(int index, {String? newText, String? newType, List<String>? newOptions}) {
-    if (index >= 0 && index < questions.length) {
-      questions[index].modifyQuestion(newText: newText, newOptions: newOptions);
+      // Parse JSON data into Question instances
+      questions = (jsonData['questions_list'] as List)
+          .map((item) => Question.fromJson(item))
+          .toList();
+      print(questions[0].questionText);
+    } catch (e) {
+      print('Error loading questions: $e');
     }
   }
 
   // Get remaining questions count
   int remainingQuestions() {
-    return questions.length - _currentQuestionIndex;
+    return questions.length - currentQuestionIndex - 1;
+  }
+
+  bool hasNextQuestion() {
+    return currentQuestionIndex < questions.length - 1;
   }
 
   // Get the next question in line, if available
   Question? nextQuestion() {
-    if (_currentQuestionIndex < questions.length) {
-      return questions[_currentQuestionIndex++];
-    } else {
-      return null; // No more questions
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      return questions[currentQuestionIndex];
+    }else{
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ${questions.length}",);
     }
+    return questions[questions.length - 1];
+  }
+
+  // Get the previous question in line, if available
+  Question? previousQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      return questions[currentQuestionIndex];
+    }
+    return null; // No previous question
   }
 }
 
 class AssessmentSession {
-  final String sessionId;
-  final Assessment assessment;
+  final Exam exam;
   DateTime startTime;
   DateTime? endTime;
-  final Map<int, String> responses = {}; // Maps question index to response
+  final Map<int, String?> responses = {}; // Maps question index to response
 
   AssessmentSession({
-    required this.sessionId,
-    required this.assessment,
+    required this.exam,
     required this.startTime,
   });
 
   // Record response to a specific question by index
-  void addResponse(int questionIndex, String response) {
+  void addResponse(int questionIndex, String? response) {
     responses[questionIndex] = response;
   }
 
@@ -105,20 +109,17 @@ class AssessmentSession {
   }
 
   // Check if the session is complete (all questions answered)
-  bool isComplete(s) {
-    return responses.length == assessment.questions.length;
+  bool isComplete() {
+    return responses.length == exam.questions.length;
   }
 
   // Convert the session to a Map for saving in a database
   Map<String, dynamic> toMap() {
     return {
-      'sessionId': sessionId,
-      'assessmentName': assessment.name,
+      'assessmentName': exam.name,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
       'responses': responses,
     };
   }
 }
-
-

@@ -13,9 +13,9 @@ class AssessmentPage extends StatelessWidget {
     return Center(
       child: OutlinedButton(
           onPressed: () {
-            NavigationController.navigateToPage(context, QuestionPage(question: Question(questionText: "Are you sleeping well", options: ["True","False"]),)); //Dummy question
+            NavigationController.navigateToPage(context, QuestionPage(exam: Exam(name: "GHQ", jsonPath: "assets/data/ghq.json" ))); //Dummy question
           },
-          child: Text("Exam 1")),
+          child: Text("GHQ")),
     );
   }
 }
