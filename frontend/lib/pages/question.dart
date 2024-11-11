@@ -1,8 +1,10 @@
+import 'package:curahead_app/controllers/navigation_controller.dart';
 import 'package:curahead_app/services/assessment_service.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_bottom_navigator.dart';
 import '../widgets/heading_bar.dart';
 import '../entities/assessment.dart';
+import 'assessment_complete.dart';
 
 class QuestionPage extends StatelessWidget {
   final Exam exam;
@@ -71,6 +73,8 @@ class _QuestionBodyState extends State<_QuestionBody> {
 
         final questionText = currentQuestion.questionText;
         final options = currentQuestion.options;
+        final isLastQuestion = assessmentService.session.exam.currentQuestionIndex == (widget.exam.questions.length - 1);
+
         return Column(
           children: [
             Expanded(
@@ -155,20 +159,25 @@ class _QuestionBodyState extends State<_QuestionBody> {
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                              setState(() {
-                                selectedOption = assessmentService.nextQuestion(selectedOption); // Move to next question
-                              });
+                              if (isLastQuestion) {
+                                NavigationController.pushAndPopUntilRoot(context, AssessmentCompletedPage());
+                              } else {
+                                setState(() {
+                                  selectedOption = assessmentService.nextQuestion(selectedOption); // Move to next question
+                                });
+                              }
                             },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 15),
-                              backgroundColor: const Color(0xfff4f6ff),
+                              backgroundColor: isLastQuestion ? Colors.white : const Color(0xfff4f6ff), // Set to white for "Finish"
+                              side: BorderSide(color: isLastQuestion ? Colors.green : Colors.transparent), // Green border for "Finish"
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text("Next"),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward),
+                              children: [
+                                Text(isLastQuestion ? "Finish" : "Next"),
+                                const SizedBox(width: 8),
+                                Icon(isLastQuestion ? Icons.check : Icons.arrow_forward),
                               ],
                             ),
                           ),
