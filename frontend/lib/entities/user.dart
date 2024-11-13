@@ -17,7 +17,7 @@ class User {
     required this.displayName,
     required this.phoneNumber,
     this.role = UserRole.patient,
-    this.imageURL = 'https://via.placeholder.com/150',
+    this.imageURL = '',
   });
 
   User.withId(String uid)

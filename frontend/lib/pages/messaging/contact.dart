@@ -1,8 +1,11 @@
 import 'chat.dart';
 import 'package:flutter/material.dart';
+import '../../entities/chat.dart';
+import '../../controllers/chat_controller.dart';
 
 class ContactListPage extends StatelessWidget {
-  const ContactListPage({super.key});
+  ContactListPage({super.key});
+  final ChatController _chatController = ChatController();
 
   @override
   Widget build(BuildContext context) {

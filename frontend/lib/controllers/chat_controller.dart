@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../services/chat_firestore_service.dart';
 import '../entities/chat.dart';
 import '../entities/message.dart';
 
 class ChatController extends ChangeNotifier {
   final ChatService _chatService = ChatService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;  // Firebase Auth instance to access user information
 
   // Variables to hold chat data
   List<Chat> _chats = [];
@@ -16,13 +18,18 @@ class ChatController extends ChangeNotifier {
   List<Message> get messages => _messages;
   bool get isLoading => _isLoading;
 
-  // Fetch all chats for a specific user
-  Future<void> fetchChats(String userId) async {
+  // Fetch all chats for the authenticated user
+  Future<void> fetchChats() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _chats = await _chatService.getAllChats(userId);
+      final user = _auth.currentUser; // Retrieve the current authenticated user
+      if (user != null) {
+        _chats = await _chatService.getAllChats(user.uid);
+      } else {
+        print("No authenticated user found.");
+      }
     } catch (e) {
       print("Error fetching chats: $e");
     }

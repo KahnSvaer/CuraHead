@@ -1,3 +1,4 @@
+import 'package:curahead_app/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {

@@ -1,9 +1,11 @@
 import 'package:curahead_app/widgets/appointment_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../entities/appointments.dart';
 import '../entities/therapist.dart';
 import '../entities/user.dart';
+import '../state_management/auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -39,6 +41,7 @@ class _ModifiedWelcomeBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String displayName = Provider.of<AuthProvider>(context).currentUser?.displayName ?? 'User';
     return Container(
       color: Colors.blue,
       padding: const EdgeInsets.all(10),
@@ -69,7 +72,7 @@ class _ModifiedWelcomeBar extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '[Profile Name]', // Dynamic profile name placeholder
+                        displayName, // Dynamic profile name placeholder
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

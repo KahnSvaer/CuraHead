@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Message {
   final String senderId;
   final String text;
-  final DateTime timestamp;
+  final DateTime localDateTime;
   final String type; // "text", "image", "file", etc.
 
   Message({
     required this.senderId,
     required this.text,
-    required this.timestamp,
+    required this.localDateTime,
     required this.type,
   });
 
@@ -19,7 +19,7 @@ class Message {
     return Message(
       senderId: data['senderId'] ?? '',
       text: data['text'] ?? '',
-      timestamp: ((data['timestamp'] as Timestamp?) ?? Timestamp.now()).toDate().toLocal(),
+      localDateTime: ((data['timestamp'] as Timestamp?) ?? Timestamp.now()).toDate().toLocal(),
       type: data['type'] ?? 'text',  // Default to "text"
     );
   }
@@ -29,7 +29,7 @@ class Message {
     return {
       'senderId': senderId,
       'text': text,
-      'timestamp': timestamp,
+      'timestamp': Timestamp.fromDate(localDateTime.toUtc()),
       'type': type,
     };
   }

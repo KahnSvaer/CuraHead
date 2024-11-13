@@ -1,3 +1,4 @@
+import 'package:curahead_app/pages/auth/auth_landing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,7 +6,6 @@ import '../state_management/auth_provider.dart';
 
 import 'navigation_controller.dart';
 
-import '../pages/auth/auth_test.dart'; //Current testing page
 import '../pages/background.dart'; //Eventual page that I will be using
 
 class SignInMethods {
@@ -17,7 +17,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Signed in from Google')),
       );
-      NavigationController.pushAndPopUntilRoot(context, AuthTest());
+      NavigationController.newRootPush(context, BackGroundPage());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in with Google: $e')),
@@ -33,7 +33,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Signed in with Email')),
       );
-      NavigationController.pushAndPopUntilRoot(context, AuthTest());
+      NavigationController.newRootPush(context, AuthLandingPage());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in with Email: $e')),
@@ -53,6 +53,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Auto Verified')),
       );
+      NavigationController.newRootPush(context, BackGroundPage());
     } else if (errorMessage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('OTP sent')),
@@ -74,7 +75,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('OTP Verified, Registration Successful')),
       );
-      NavigationController.pushAndPopUntilRoot(context, AuthTest());
+      NavigationController.newRootPush(context, AuthLandingPage());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to verify OTP: $e')),
@@ -92,6 +93,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Auto Verified')),
       );
+      NavigationController.newRootPush(context, BackGroundPage());
     } else if (errorMessage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('OTP sent')),
@@ -113,7 +115,7 @@ class SignInMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('OTP Verified, Registration Successful')),
       );
-      NavigationController.pushAndPopUntilRoot(context, AuthTest());
+      NavigationController.newRootPush(context, BackGroundPage());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to verify OTP: $e')),

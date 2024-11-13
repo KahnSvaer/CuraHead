@@ -1,5 +1,7 @@
 import 'package:curahead_app/entities/therapist.dart';
+import 'package:curahead_app/state_management/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/therapist_card.dart';
 import '../widgets/search_bar.dart';
@@ -40,6 +42,9 @@ class _WelcomeBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use the displayName from Firebase Auth, or a placeholder if it's null
+    final String displayName = Provider.of<AuthProvider>(context).currentUser?.displayName ?? 'User';
+
     return Container(
       color: Colors.blue,
       padding: const EdgeInsets.all(10),
@@ -49,17 +54,15 @@ class _WelcomeBar extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 30.0, // Profile icon size
-                backgroundColor: Colors.white, // CircleAvatar background color
-                child: Icon(Icons.person,
-                    color: Colors.blue, size: 30), // Default person icon
+                radius: 30.0,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Colors.blue, size: 30),
               ),
-              const SizedBox(width: 10), // Space between profile and text
+              const SizedBox(width: 10),
               Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Align the text to the left
-                children: const [
-                  Text(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
                     'Welcome',
                     style: TextStyle(
                       color: Colors.white,
@@ -68,8 +71,8 @@ class _WelcomeBar extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '[Profile Name]',
-                    style: TextStyle(
+                    displayName, // Display the authenticated user's name
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
                     ),
@@ -78,7 +81,7 @@ class _WelcomeBar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 15), // Space between profile and search bar
+          const SizedBox(height: 15),
           const SearchWidget(),
         ],
       ),

@@ -11,13 +11,13 @@ class Therapist extends User {
   final int patientsNum; // Added number of patients field
   final int experience; // Added experience field
   final int numComments;
-  final String imageURL; // Added number of comments field
 
   Therapist({
     required super.uid,
     required super.displayName,
     required super.email,
     required super.phoneNumber,
+    super.imageURL = '',
     super.role = UserRole.therapist,
     required this.licenseNumber,
     required this.specialties,
@@ -29,7 +29,7 @@ class Therapist extends User {
     this.patientsNum = 0,
     this.experience = 0,
     this.numComments = 0,
-    this.imageURL = 'https://via.placeholder.com/150'
+
   });
 
   // Would later use this to find therapist from database directly

@@ -6,70 +6,70 @@ class ChatService {
   // Collection reference for chats
   final CollectionReference chatsRef = FirebaseFirestore.instance.collection('chats');
 
-  // Create a new chat with auto-generated chatId
+  // Chat creation
   Future<void> createChat(Chat chatData) async {
     try {
       DocumentReference newChatRef = await chatsRef.add(chatData.toMap());
+
       await newChatRef.update({'chatId': newChatRef.id});
-      chatData.chatId = newChatRef.id;
+      chatData.chatId = newChatRef.id; // Final set for chatId in chatData, no further changes
+
       CollectionReference messagesRef = newChatRef.collection('messages');
-      await messagesRef.doc('initial').set({
-        'systemMessage': 'Chat created',
+      await messagesRef.add({
+        'senderId': 'system', // indicating system-generated message
+        'text': 'Chat created',
         'timestamp': FieldValue.serverTimestamp(),
+        'type': 'system'
       });
     } catch (e) {
       print("Error creating chat: $e");
     }
   }
 
-  // Get all chats where the user is a participant
+  // Retrieve all chats where the user is a participant (Contacts)
   Future<List<Chat>> getAllChats(String userId) async {
     try {
-      // Query chats where the user's ID is in the 'participants' list
       QuerySnapshot snapshot = await chatsRef
-          .where('participants', arrayContains: userId) // Filters chats with the user
+          .where('participants', arrayContains: userId)
           .get();
 
-      List<Chat> chatList = [];
-      for (var doc in snapshot.docs) {
-        chatList.add(Chat.fromFirestore(doc));
-      }
-      return chatList;
+      return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
     } catch (e) {
       print("Error getting chats: $e");
       return [];
     }
   }
 
-  // Get all messages inside a specific chat (messages are a subcollection of chat)
   Future<List<Message>> getMessagesInChat(String chatId) async {
     try {
-      // Accessing the subcollection 'messages' inside a specific chat document
       CollectionReference messagesRef = chatsRef.doc(chatId).collection('messages');
 
       QuerySnapshot snapshot = await messagesRef.orderBy('timestamp').get();
-      List<Message> messages = [];
-      for (var doc in snapshot.docs) {
-        messages.add(Message.fromFirestore(doc));
-      }
-      return messages;
+      return snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList();
     } catch (e) {
       print("Error getting messages: $e");
       return [];
     }
   }
 
-  // Send a message in a specific chat (messages are a subcollection of chat)
   Future<void> sendMessage(String chatId, Message messageData) async {
     try {
       CollectionReference messagesRef = chatsRef.doc(chatId).collection('messages');
 
-      await messagesRef.add({
-        ...messageData.toMap(),
-        'timestamp': Timestamp.fromDate(messageData.timestamp.toUtc()),
-      });
+      await messagesRef.add(messageData.toMap());
     } catch (e) {
       print("Error sending message: $e");
+    }
+  }
+
+  Future<void> updateChatMessage(String chatId, String lastMessage) async {
+    try {
+      await chatsRef.doc(chatId).update({
+        'lastMessage': lastMessage,
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print("Error updating chat message: $e");
     }
   }
 }

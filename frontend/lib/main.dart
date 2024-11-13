@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: const BackGroundPage(),
-            // home: authProvider.currentUser == null
-            //     ? AuthLandingPage() // Replace with your actual auth landing page
-            //     : const BackGroundPage(),
+            // home: const BackGroundPage(),
+            home: authProvider.currentUser == null
+                ? AuthLandingPage() // Replace with your actual auth landing page
+                : const BackGroundPage(),
           );
         },
       ),
