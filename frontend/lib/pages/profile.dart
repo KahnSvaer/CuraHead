@@ -1,9 +1,11 @@
 import 'package:curahead_app/widgets/appointment_card.dart';
+import 'package:curahead_app/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../entities/appointments.dart';
 import '../entities/therapist.dart';
+import '../entities/user.dart';
 import '../state_management/auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -40,7 +42,8 @@ class _ModifiedWelcomeBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String displayName = Provider.of<AuthProvider>(context).currentUser?.displayName ?? 'User';
+    final User? user = Provider.of<AuthProvider>(context).currentUser;
+    final String displayName = user?.displayName ?? 'User';
     return Container(
       color: Colors.blue,
       padding: const EdgeInsets.all(10),
@@ -53,7 +56,7 @@ class _ModifiedWelcomeBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Profile Image
-                  _buildProfileImage(60),
+                  ProfileImage(user: user!, radius: 60),
                   const SizedBox(
                       width: 10), // Space between profile image and text
 
@@ -121,46 +124,6 @@ class _ModifiedWelcomeBar extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildProfileImage(double radius) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.white,
-          child: ClipOval(
-            child: Image.network(
-              '', // URL for the profile image
-              fit: BoxFit.cover,
-              width: 2 * radius,
-              height: 2 * radius,
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                return Icon(
-                  Icons.person,
-                  size: radius * 1.3,
-                  color: Colors.blue,
-                );
-              },
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
-                    color: Colors.white,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

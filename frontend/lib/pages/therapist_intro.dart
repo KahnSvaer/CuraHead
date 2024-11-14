@@ -1,5 +1,6 @@
 import 'package:curahead_app/controllers/navigation_controller.dart';
 import 'package:curahead_app/pages/booking.dart';
+import 'package:curahead_app/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 
 import '../entities/therapist.dart';
@@ -17,9 +18,11 @@ class TherapistIntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final double imageRadius = screenWidth * 0.6;
+
     final String name = therapist.displayName;
     final double stars = therapist.rating;
-    final String imageURL = therapist.imageURL;
     return Scaffold(
       appBar: const CustomHeadingBar(
         title: 'Therapist',
@@ -39,11 +42,7 @@ class TherapistIntroPage extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20), // Space below the app bar
-                        TherapistImageWidget(
-                          imageUrl: imageURL,
-                          widthPercentage: 50,
-                          heightPercentage: 50,
-                        ),
+                        ProfileImage(user: therapist, radius: imageRadius/2),
                         const SizedBox(height: 10),
                         Text(
                           name,
@@ -77,76 +76,7 @@ class TherapistIntroPage extends StatelessWidget {
   }
 }
 
-class TherapistImageWidget extends StatelessWidget {
-  final String imageUrl;
-  final double widthPercentage; // Percentage for width
-  final double heightPercentage; // Percentage for height
 
-  const TherapistImageWidget({
-    required this.imageUrl,
-    this.widthPercentage = 50, // Default 20% width
-    this.heightPercentage = 20, // Default 20% height
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    final double width = screenWidth * (widthPercentage / 100);
-    final double height = screenHeight * (heightPercentage / 100);
-
-    final double radius = width > height ? height : width;
-
-    return Container(
-      width: radius, // Width of the circular container
-      height: radius, // Height of the circular container
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.grey[300], // Background color if needed
-      ),
-      child: ClipOval(
-        child: FutureBuilder<ImageProvider>(
-          future: _getImageProvider(imageUrl),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              ); // Show loading indicator
-            } else if (snapshot.hasError ||
-                snapshot.data == null ||
-                imageUrl == '') {
-              return const FittedBox(
-                fit: BoxFit.contain,
-                child: Icon(
-                  Icons.person, // Your icon here
-                  color: Colors.white,
-                ),
-              ); // Default icon if there's an error
-            } else {
-              return Image(
-                image: snapshot.data!,
-                fit: BoxFit.cover,
-              ); // Display the loaded image
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  // Method to get image provider
-  Future<ImageProvider> _getImageProvider(String url) async {
-    try {
-      // Attempt to load the image from the URL
-      return NetworkImage(url);
-    } catch (e) {
-      // In case of an error, throw an exception
-      throw Exception('Image loading failed');
-    }
-  }
-}
 
 class TherapistInformationWidget extends StatelessWidget {
   final Therapist therapist;

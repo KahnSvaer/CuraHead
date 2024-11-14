@@ -29,7 +29,6 @@ class AppointmentController{
       NavigationController.goBack(context);
     } catch (e) {
       _showErrorSnackBar(context, "Error saving booking: $e");
-    } finally {
     }
   }
 

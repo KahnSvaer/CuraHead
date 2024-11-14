@@ -1,8 +1,10 @@
 import 'package:curahead_app/entities/therapist.dart';
 import 'package:curahead_app/state_management/auth_provider.dart';
+import 'package:curahead_app/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../entities/user.dart';
 import '../widgets/therapist_card.dart';
 import '../widgets/search_bar.dart';
 
@@ -43,7 +45,8 @@ class _WelcomeBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use the displayName from Firebase Auth, or a placeholder if it's null
-    final String displayName = Provider.of<AuthProvider>(context).currentUser?.displayName ?? 'User';
+    final User? user = Provider.of<AuthProvider>(context).currentUser;
+    final String displayName = user?.displayName ?? 'User';
 
     return Container(
       color: Colors.blue,
@@ -53,11 +56,7 @@ class _WelcomeBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30.0,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.blue, size: 30),
-              ),
+              ProfileImage(user: user!, radius: 30),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

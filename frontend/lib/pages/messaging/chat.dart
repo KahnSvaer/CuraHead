@@ -1,12 +1,14 @@
 import 'package:curahead_app/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../entities/user.dart';
+
 class ChatPage extends StatefulWidget {
-  final String contact;
+  final User user;
 
   const ChatPage({
     super.key,
-    this.contact = "",
+    required this.user,
   });
 
   @override
@@ -38,9 +40,10 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    String contact = widget.user.displayName;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.contact.isNotEmpty ? widget.contact : 'Chat'),
+        title: Text(contact.isNotEmpty ? contact : 'Chat'),
         centerTitle: true,
       ),
       body: GestureDetector(

@@ -25,6 +25,7 @@ class AuthProvider extends ChangeNotifier {
       displayName: firebaseUser.displayName ?? '',
       phoneNumber: firebaseUser.phoneNumber ?? '',
       role: role,
+      imageURL: firebaseUser.photoURL ?? "",
     );
   }
 

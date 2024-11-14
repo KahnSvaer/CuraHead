@@ -1,11 +1,10 @@
-import 'chat.dart';
 import 'package:flutter/material.dart';
-import '../../entities/chat.dart';
-import '../../controllers/chat_controller.dart';
+import '../../entities/user.dart';
+import '../../widgets/profile_image.dart';
+import 'chat.dart';
 
 class ContactListPage extends StatelessWidget {
   ContactListPage({super.key});
-  final ChatController _chatController = ChatController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class ContactListPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: contacts.length,
         itemBuilder: (context, index) {
-          return ContactButton(name: contacts[index]);
+          return ContactButton(user: User(uid: "", email: "", displayName: contacts[index], phoneNumber: ""));
         },
       ),
     );
@@ -33,26 +32,19 @@ class ContactListPage extends StatelessWidget {
 }
 
 class ContactButton extends StatelessWidget {
-  final String name;
+  final User user;
 
-  const ContactButton({required this.name, super.key});
-
-  Color _getRandomColor(String name) {
-    final int hash = name.hashCode;
-    final int red = (hash & 0xFF0000) >> 16;
-    final int green = (hash & 0x00FF00) >> 8;
-    final int blue = (hash & 0x0000FF);
-    return Color.fromARGB(255, red, green, blue);
-  }
+  const ContactButton({required this.user, super.key});
 
   @override
   Widget build(BuildContext context) {
+    String name = user.displayName;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: TextButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => ChatPage(contact: name))
+            MaterialPageRoute(builder: (context) => ChatPage(user: user)),
           );
         },
         style: TextButton.styleFrom(
@@ -65,13 +57,7 @@ class ContactButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: _getRandomColor(name),
-              child: Text(
-                name[0].toUpperCase(),
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
+            ProfileImage(user: user, radius: 20.0),
             const SizedBox(width: 16),
             Expanded(
               child: Align(
