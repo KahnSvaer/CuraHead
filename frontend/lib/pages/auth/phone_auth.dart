@@ -1,6 +1,6 @@
 import 'package:curahead_app/pages/auth/auth_landing.dart';
 import 'package:flutter/material.dart';
-import '../../controllers/authController.dart';
+import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 
 class PhoneAuthScreen extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/navigation_controller.dart';
 import 'forgetPassword.dart';
-import '../../controllers/authController.dart';
+import '../../controllers/auth_controller.dart';
 
 class EmailAuthScreen extends StatefulWidget {
   const EmailAuthScreen({super.key});

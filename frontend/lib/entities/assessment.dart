@@ -71,8 +71,6 @@ class Exam {
     if (currentQuestionIndex < questions.length - 1) {
       currentQuestionIndex++;
       return questions[currentQuestionIndex];
-    }else{
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ${questions.length}",);
     }
     return questions[questions.length - 1];
   }
@@ -90,7 +88,6 @@ class Exam {
 class AssessmentSession {
   final Exam exam;
   DateTime startTime;
-  DateTime? endTime;
   final Map<int, String?> responses = {}; // Maps question index to response
 
   AssessmentSession({
@@ -103,11 +100,6 @@ class AssessmentSession {
     responses[questionIndex] = response;
   }
 
-  // Mark the session as complete by setting the end time
-  void completeSession() {
-    endTime = DateTime.now();
-  }
-
   // Check if the session is complete (all questions answered)
   bool isComplete() {
     return responses.length == exam.questions.length;
@@ -117,9 +109,24 @@ class AssessmentSession {
   Map<String, dynamic> toMap() {
     return {
       'assessmentName': exam.name,
+      'json_path': exam.jsonPath,
       'startTime': startTime.toIso8601String(),
-      'endTime': endTime?.toIso8601String(),
-      'responses': responses,
+      'responses': responses.map((key, value) => MapEntry(key.toString(), value)), // Convert int keys to String
     };
+  }
+
+  factory AssessmentSession.fromMap(Map<String, dynamic> data) {
+    return AssessmentSession(
+      exam: Exam(name: data['assessmentName'], jsonPath: data['json_path']),
+      // assuming `Exam` has a `fromMap` method
+      startTime: DateTime.parse(data['startTime']),
+    )
+      ..responses.addAll(
+        Map<int, String?>.fromEntries(
+          (data['responses'] as Map<String, dynamic>).entries.map(
+                (entry) => MapEntry(int.tryParse(entry.key) ?? 0, entry.value as String?),
+          ),
+        ),
+      );
   }
 }

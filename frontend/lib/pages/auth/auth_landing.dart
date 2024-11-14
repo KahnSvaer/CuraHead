@@ -6,7 +6,7 @@ import 'signup.dart';
 
 import '../../controllers/navigation_controller.dart';
 
-import '../../controllers/authController.dart';
+import '../../controllers/auth_controller.dart';
 
 class AuthLandingPage extends StatelessWidget {
   const AuthLandingPage({super.key});

@@ -1,3 +1,5 @@
+import 'package:curahead_app/controllers/navigation_controller.dart';
+import 'package:curahead_app/pages/booking.dart';
 import 'package:flutter/material.dart';
 
 import '../entities/therapist.dart';
@@ -17,12 +19,6 @@ class TherapistIntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final String name = therapist.displayName;
     final double stars = therapist.rating;
-    final String title = therapist.qualifications;
-    final String hospital = therapist.hospital;
-    final String details = therapist.details;
-    final int patientsNum = therapist.patientsNum;
-    final int experience = therapist.experience;
-    final int numComments = therapist.numComments;
     final String imageURL = therapist.imageURL;
     return Scaffold(
       appBar: const CustomHeadingBar(
@@ -66,12 +62,7 @@ class TherapistIntroPage extends StatelessWidget {
                           alignment: MainAxisAlignment.center,
                         ),
                         TherapistInformationWidget(
-                          title: title,
-                          hospital: hospital,
-                          details: details,
-                          patientsNum: patientsNum,
-                          experience: experience,
-                          numComments: numComments,
+                          therapist: therapist,
                         ),
                       ],
                     ),
@@ -158,24 +149,22 @@ class TherapistImageWidget extends StatelessWidget {
 }
 
 class TherapistInformationWidget extends StatelessWidget {
-  final String title;
-  final String hospital;
-  final String details;
-  final int patientsNum;
-  final int experience;
-  final int numComments;
+  final Therapist therapist;
 
-  const TherapistInformationWidget(
-      {super.key,
-        this.title = 'Therapist',
-        this.hospital = '',
-        this.details = '',
-        this.patientsNum = 0,
-        this.experience = 0,
-        this.numComments = 0});
+  const TherapistInformationWidget({
+    super.key,
+    required this.therapist,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final String title = therapist.qualifications;
+    final String hospital = therapist.hospital;
+    final String details = therapist.details;
+    final int patientsNum = therapist.patientsNum;
+    final int experience = therapist.experience;
+    final int numComments = therapist.numComments;
+
     return Expanded(child: Container(
       color: Colors.white, // Background color
       margin: EdgeInsets.all(20),
@@ -222,8 +211,7 @@ class TherapistInformationWidget extends StatelessWidget {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Add functionality for the second button
-                    print('Button 2 pressed');
+                    NavigationController.navigateToPage(context, BookingPage(therapist: therapist,));
                   },
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(

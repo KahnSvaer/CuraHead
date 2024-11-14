@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../entities/appointments.dart';
 import '../entities/therapist.dart';
-import '../entities/user.dart';
 import '../state_management/auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -213,7 +212,7 @@ class _Graph extends StatelessWidget {
 
   const _Graph({
     required this.selectedNotifier,
-    this.aspectRatio = 5 / 4,
+    this.aspectRatio = 1.25,
   });
 
   @override
@@ -266,8 +265,6 @@ class _AppointmentsBar extends StatelessWidget {
           const SizedBox(height: 16.0),
           AppointmentCard(
             appointment: Appointment(
-              id: 'appointment789',
-              client: User.withId("123"),
               therapist: Therapist.withId("123"),
               appointmentDateTime: DateTime.now().add(Duration(days: 1, hours: 2)), // Appointment for tomorrow at 2 hours later
             ),

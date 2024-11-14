@@ -4,7 +4,7 @@ import '../entities/message.dart';
 
 class ChatService {
   // Collection reference for chats
-  final CollectionReference chatsRef = FirebaseFirestore.instance.collection('chats');
+  final CollectionReference chatsRef = FirebaseFirestore.instance.collection('Chats');
 
   // Chat creation
   Future<void> createChat(Chat chatData) async {
@@ -14,7 +14,7 @@ class ChatService {
       await newChatRef.update({'chatId': newChatRef.id});
       chatData.chatId = newChatRef.id; // Final set for chatId in chatData, no further changes
 
-      CollectionReference messagesRef = newChatRef.collection('messages');
+      CollectionReference messagesRef = newChatRef.collection('Messages');
       await messagesRef.add({
         'senderId': 'system', // indicating system-generated message
         'text': 'Chat created',
@@ -42,7 +42,7 @@ class ChatService {
 
   Future<List<Message>> getMessagesInChat(String chatId) async {
     try {
-      CollectionReference messagesRef = chatsRef.doc(chatId).collection('messages');
+      CollectionReference messagesRef = chatsRef.doc(chatId).collection('Messages');
 
       QuerySnapshot snapshot = await messagesRef.orderBy('timestamp').get();
       return snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList();
@@ -54,7 +54,7 @@ class ChatService {
 
   Future<void> sendMessage(String chatId, Message messageData) async {
     try {
-      CollectionReference messagesRef = chatsRef.doc(chatId).collection('messages');
+      CollectionReference messagesRef = chatsRef.doc(chatId).collection('Messages');
 
       await messagesRef.add(messageData.toMap());
     } catch (e) {

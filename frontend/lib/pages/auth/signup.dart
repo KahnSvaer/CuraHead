@@ -2,7 +2,7 @@ import 'package:curahead_app/pages/auth/auth_landing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../state_management/auth_provider.dart';
-import '../../controllers/authController.dart';
+import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 
 class RegistrationScreen extends StatefulWidget {

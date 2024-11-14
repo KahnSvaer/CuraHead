@@ -1,10 +1,8 @@
-import 'package:curahead_app/controllers/navigation_controller.dart';
-import 'package:curahead_app/services/assessment_service.dart';
 import 'package:flutter/material.dart';
+import '../controllers/assessment_controller.dart';
 import '../widgets/custom_bottom_navigator.dart';
 import '../widgets/heading_bar.dart';
 import '../entities/assessment.dart';
-import 'assessment_complete.dart';
 
 class QuestionPage extends StatelessWidget {
   final Exam exam;
@@ -50,13 +48,13 @@ class _QuestionBody extends StatefulWidget {
 }
 
 class _QuestionBodyState extends State<_QuestionBody> {
-  late final AssessmentService assessmentService;
+  late final AssessmentController assessmentService;
   String? selectedOption; // Track the selected option for the current question
 
   @override
   void initState() {
     super.initState();
-    assessmentService = AssessmentService(exam: widget.exam);
+    assessmentService = AssessmentController(exam: widget.exam);
     assessmentService.startSession(); // Start the session and load the first question
   }
 
@@ -107,7 +105,11 @@ class _QuestionBodyState extends State<_QuestionBody> {
                               child: OutlinedButton(
                                 onPressed: () {
                                   setState(() {
-                                    selectedOption = option; // Set the selected option
+                                    if (selectedOption!= option){
+                                      selectedOption = option; // Set the selected option
+                                    }else{
+                                      selectedOption = null;
+                                    }
                                   });
                                 },
                                 style: OutlinedButton.styleFrom(
@@ -138,12 +140,13 @@ class _QuestionBodyState extends State<_QuestionBody> {
                             child: OutlinedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedOption = assessmentService.previousQuestion(); // Reset selected option on navigation
+                                  selectedOption = assessmentService.previousQuestion(selectedOption); // Reset selected option on navigation
                                 });
                               },
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 15),
                                 backgroundColor: const Color(0xfff4f6ff),
+                                side: BorderSide(color: Colors.transparent), // Green border for "Finish"
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -159,13 +162,9 @@ class _QuestionBodyState extends State<_QuestionBody> {
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                              if (isLastQuestion) {
-                                NavigationController.pushAndPopUntilRoot(context, AssessmentCompletedPage());
-                              } else {
-                                setState(() {
-                                  selectedOption = assessmentService.nextQuestion(selectedOption); // Move to next question
-                                });
-                              }
+                              setState(() {
+                                selectedOption = assessmentService.nextQuestion(context, selectedOption); // Move to next question
+                              });
                             },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 15),
