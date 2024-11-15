@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curahead_app/entities/therapist.dart';
 
 enum AppointmentStatus {
@@ -23,7 +24,7 @@ class Appointment {
   factory Appointment.fromMap(Map<String, dynamic> data) {
     return Appointment(
       therapist: Therapist.withId(data['therapistId']),
-      appointmentDateTime: DateTime.parse(data['appointmentDateTime']).toLocal(),
+      appointmentDateTime:  (data['appointmentDateTime'] as Timestamp).toDate(),
       status: AppointmentStatus.values.byName(data['status']),
     );
   }
@@ -31,7 +32,7 @@ class Appointment {
   Map<String, dynamic> toMap() {
     return {
       'therapistId': therapist.uid,
-      'appointmentDateTime': appointmentDateTime.toUtc().toIso8601String(),
+      'appointmentDateTime': Timestamp.fromDate(appointmentDateTime),
       'status': status.name,
     };
   }

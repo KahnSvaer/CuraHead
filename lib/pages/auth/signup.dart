@@ -2,7 +2,6 @@ import 'package:curahead_app/pages/auth/auth_landing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../state_management/auth_provider.dart';
-import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -13,77 +12,21 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isOtpSent = false; // Tracks if the OTP has been sent
-  bool _isEmailSignIn = false; // Tracks if the user is signing in with email
-  bool _isVerified = false; // Tracks if the OTP has been verified
-  String? verificationID;
-
-  // Toggles between email and phone sign-in methods
-  void toggleSignInMethod() {
-    setState(() {
-      _isEmailSignIn = !_isEmailSignIn; // Switches sign-in method
-      _isOtpSent = false; // Resets OTP sent state
-      _isVerified = false; // Resets verification state
-      _emailController.clear(); // Clears email input
-      _phoneController.clear(); // Clears phone number input
-      _passwordController.clear(); // Clears password input
-      _displayNameController.clear(); // Clears display name input
-      FocusScope.of(context).unfocus(); // Removes focus from text fields
-    });
-  }
-
-  // Function to handle OTP button press
-  void handleOtpSending() {
-    setState(() {
-      if (!_isOtpSent) { // If OTP has not been sent
-        if (_isEmailSignIn && _emailController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your email.')));
-          return;
-        } else if (!_isEmailSignIn && _phoneController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your phone number.')));
-          return;
-        }
-        _isOtpSent = true; // Set OTP sent state to true
-        if (!_isEmailSignIn) {
-          SignInMethods _signInMethods = SignInMethods();
-          _signInMethods.sendOTPtoPhone(context, '+91${_phoneController.text}', _displayNameController.text);
-        }
-      } else if (!_isVerified) { // If OTP has been sent and not verified
-        _isVerified = true; // Set verified state to true
-      }
-    });
-  }
-
-  // Function to handle OTP button press
-  void handleOtpVerification() {
-    setState(() {
-      if (!_isVerified) { // If OTP has been sent and not verified
-        _isVerified = true; // Set verified state to true
-        SignInMethods _signInMethods = SignInMethods();
-        _signInMethods.verifyOTP(context, '+91${_phoneController.text}', _displayNameController.text);
-      }
-    });
-  }
 
   Future<void> registerUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-      if (_isEmailSignIn) { // If signing up with email
         await authProvider.registerWithEmail(
           _emailController.text,
           _passwordController.text,
           _displayNameController.text,
         );
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration successful!')));
-      } else {
-        // TODO: Implement registration with phone
-      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration failed: $e')));
     }
@@ -94,75 +37,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          const BackgroundImage(), // Background image of the screen
+          const BackgroundImage(),
           SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 300), // Spacer to position content
+                const SizedBox(height: 300),
                 Center(
                   child: Container(
-                    padding: const EdgeInsets.all(16.0), // Padding for the container
-                    margin: const EdgeInsets.symmetric(horizontal: 24.0), // Margin for the container
+                    padding: const EdgeInsets.all(16.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9), // Background color with opacity
-                      borderRadius: BorderRadius.circular(8.0), // Rounded corners
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          _isEmailSignIn ? 'Sign Up with Email' : 'Sign Up with Phone Number',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Title style
+                        const Text(
+                          'Sign Up with Email', // Fixed sign-in method
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 10), // Spacer
+                        const SizedBox(height: 10),
                         TextField(
-                          controller: _displayNameController, // Controller for display name input
+                          controller: _displayNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Name', // Label for display name
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Padding for the text field
+                            labelText: 'Name',
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0),
                           ),
                         ),
-                        const SizedBox(height: 10), // Spacer
-                        ConditionalInputField(
-                          isEmailSignIn: _isEmailSignIn,
-                          emailController: _emailController, // Controller for email input
-                          phoneController: _phoneController, // Controller for phone input
-                          toShow: (!_isOtpSent && !_isVerified), // Shows input fields based on state
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
                         ),
-                        const SizedBox(height: 10), // Spacer
-                        if (_isVerified) ...[ // Display this if verified
-                          const VerifiedIcon(), // Icon to show verification
-                          const SizedBox(height: 10), // Spacer
-                          if (_isEmailSignIn)
-                            PasswordField(controller: _passwordController), // Password input field
-                        ],
-                        const SizedBox(height: 10), // Spacer
-                        if (!_isVerified && _isOtpSent) const OtpField(), // OTP input field if OTP sent
-                        const SizedBox(height: 10), // Spacer
-                        // Separate buttons for sending and verifying OTP
-                        if (!_isVerified && !_isOtpSent)
-                          ElevatedButton(
-                            onPressed: handleOtpSending, // Send OTP button
-                            child: const Text('Send OTP'),
-                          ),
-                        if (!_isVerified && _isOtpSent)
-                          ElevatedButton(
-                            onPressed: handleOtpVerification, // Verify OTP button
-                            child: const Text('Verify OTP'),
-                          ),
-                        if (_isVerified)
-                          RegisterButton(onPressed: registerUser), // Registration button after verification
-                        const SizedBox(height: 20), // Spacer
-                        TextButton(
-                          onPressed: toggleSignInMethod, // Button to toggle sign-in method
-                          child: Text(
-                            _isEmailSignIn ? 'Sign in with Phone Number instead' : 'Sign in with Email instead',
-                            style: const TextStyle(color: Colors.blue), // Button text style
-                          ),
-                        ),
-                        const Divider(thickness: 1.5), // Divider between sections
-                        const OldUserLoginLink(), // Link for existing users to log in
+                        const SizedBox(height: 10),
+                        PasswordField(controller: _passwordController),
+                        const SizedBox(height: 20),
+                        RegisterButton(onPressed: registerUser),
+                        const SizedBox(height: 20),
+                        const Divider(thickness: 1.5),
+                        const OldUserLoginLink(),
                       ],
                     ),
                   ),
@@ -170,7 +89,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ],
             ),
           ),
-          const BackButtonIcon(), // Back button for navigation
+          const BackButtonIcon(),
         ],
       ),
     );
@@ -185,104 +104,42 @@ class BackgroundImage extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/background.jpg'), // Background image asset
-          fit: BoxFit.cover, // Cover the entire container
+          image: AssetImage('assets/background.jpg'),
+          fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
 
-class ConditionalInputField extends StatelessWidget {
-  final bool isEmailSignIn; // Determines which input field to show
-  final TextEditingController emailController; // Controller for email input
-  final TextEditingController phoneController; // Controller for phone input
-  final bool toShow; // Controls visibility of input fields
-
-  const ConditionalInputField({
-    required this.isEmailSignIn,
-    required this.emailController,
-    required this.phoneController,
-    required this.toShow,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isEmailSignIn
-        ? TextField(
-      controller: emailController, // Email input field
-      decoration: const InputDecoration(
-        labelText: 'Email', // Label for email input
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Padding for text field
-      ),
-      keyboardType: TextInputType.emailAddress, // Email keyboard type
-      enabled: toShow, // Enable/disable based on state
-    )
-        : TextField(
-      controller: phoneController, // Phone number input field
-      decoration: const InputDecoration(
-        labelText: 'Phone Number', // Label for phone input
-        prefixText: '+91 ', // Country code prefix
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Padding for text field
-      ),
-      keyboardType: TextInputType.phone, // Phone number keyboard type
-      enabled: toShow, // Enable/disable based on state
-    );
-  }
-}
-
-class VerifiedIcon extends StatelessWidget {
-  const VerifiedIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.check, color: Colors.green); // Icon to indicate verification success
-  }
-}
-
 class PasswordField extends StatelessWidget {
-  final TextEditingController controller; // Controller for password input
+  final TextEditingController controller;
 
   const PasswordField({required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller, // Password input field
+      controller: controller,
       decoration: const InputDecoration(
-        labelText: 'Password', // Label for password input
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Padding for text field
+        labelText: 'Password',
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
       ),
-      obscureText: true, // Ensures the password is obscured
-    );
-  }
-}
-
-class OtpField extends StatelessWidget {
-  const OtpField({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: const InputDecoration(
-        labelText: 'Enter OTP', // Label for OTP input
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Padding for text field
-      ),
-      keyboardType: TextInputType.number, // Number keyboard type
+      obscureText: true,
     );
   }
 }
 
 class RegisterButton extends StatelessWidget {
-  final VoidCallback onPressed; // Callback for registration action
+  final VoidCallback onPressed;
 
   const RegisterButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed, // Registration button
-      child: const Text('Register'), // Button text
+      onPressed: onPressed,
+      child: const Text('Register'),
     );
   }
 }
@@ -294,12 +151,12 @@ class OldUserLoginLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text('Already have an account?'), // Text for existing users
+        const Text('Already have an account?'),
         TextButton(
           onPressed: () {
-            NavigationController.pushAndPopUntilRoot(context, AuthLandingPage()); // Navigates to login screen
+            NavigationController.pushAndPopUntilRoot(context, AuthLandingPage());
           },
-          child: const Text('Login'), // Button text for login
+          child: const Text('Login'),
         ),
       ],
     );
@@ -315,8 +172,8 @@ class BackButtonIcon extends StatelessWidget {
       top: 40,
       left: 16,
       child: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white), // Back button icon
-        onPressed: () => Navigator.pop(context), // Action for back button
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
       ),
     );
   }

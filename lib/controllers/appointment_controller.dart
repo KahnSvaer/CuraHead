@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curahead_app/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:curahead_app/entities/appointments.dart';
@@ -35,7 +36,7 @@ class AppointmentController{
   // Get all bookings for a client
   Future<List<Appointment>> getBookingsForClient(BuildContext context, String userId) async {
     try {
-      final bookings = await _appointmentService.getBookingsForClient(userId);
+      final bookings = await _appointmentService.getBookingsForClient();
       return bookings;
     } catch (e) {
       _showErrorSnackBar(context, "Error fetching bookings for client: $e");
@@ -64,7 +65,7 @@ class AppointmentController{
   }
 
   // Reschedule an appointment
-  Future<void> rescheduleBooking(BuildContext context, String bookingId, DateTime newDateTime) async {
+  Future<void> rescheduleBooking(BuildContext context, String bookingId, Timestamp newDateTime) async {
     try {
       await _appointmentService.rescheduleBooking(bookingId, newDateTime);
     } catch (e) {
@@ -72,19 +73,8 @@ class AppointmentController{
     }
   }
 
-  // Get all bookings within a specific date range
-  Future<List<Appointment>> getBookingsInRange(BuildContext context, DateTime startDate, DateTime endDate) async {
-    try {
-      final bookings = await _appointmentService.getBookingsInRange(startDate, endDate);
-      return bookings;
-    } catch (e) {
-      _showErrorSnackBar(context, "Error fetching bookings in date range: $e");
-      return [];
-    }
-  }
-
   // Check availability for a specific time slot
-  Future<bool> isTimeSlotAvailable(BuildContext context, String therapistId, DateTime dateTime) async {
+  Future<bool> isTimeSlotAvailable(BuildContext context, String therapistId, Timestamp dateTime) async {
     try {
       return await _appointmentService.isTimeSlotAvailable(therapistId, dateTime);
     } catch (e) {
@@ -93,35 +83,15 @@ class AppointmentController{
     }
   }
 
-  // Get bookings by status
-  Future<List<Appointment>> getBookingsByStatus(BuildContext context, AppointmentStatus status) async {
-    try {
-      final bookings = await _appointmentService.getBookingsByStatus(status);
-      return bookings;
-    } catch (e) {
-      _showErrorSnackBar(context, "Error fetching bookings by status: $e");
-      return [];
-    }
-  }
-
   // Get upcoming bookings for a client
-  Future<List<Appointment>> getUpcomingAppointmentsForClient(BuildContext context, String userId) async {
+  Future<List<Appointment>> getUpcomingAppointmentsForClient(BuildContext context) async {
     try {
-      final bookings = await _appointmentService.getUpcomingAppointmentsForClient(userId);
+      final bookings = await _appointmentService.getUpcomingAppointmentsForClient();
       return bookings;
     } catch (e) {
       _showErrorSnackBar(context, "Error fetching upcoming appointments for client: $e");
+      print(e);
       return [];
-    }
-  }
-
-  // Count upcoming appointments for a therapist
-  Future<int> countUpcomingAppointmentsForTherapist(BuildContext context, String therapistId) async {
-    try {
-      return await _appointmentService.countUpcomingAppointmentsForTherapist(therapistId);
-    } catch (e) {
-      _showErrorSnackBar(context, "Error counting upcoming appointments for therapist: $e");
-      return 0;
     }
   }
 

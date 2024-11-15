@@ -1,7 +1,7 @@
 import 'package:curahead_app/entities/assessment.dart';
 import 'package:flutter/material.dart';
 
-import '../controllers/navigation_controller.dart';
+import '../../controllers/navigation_controller.dart';
 
 import 'question.dart';
 

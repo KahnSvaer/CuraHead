@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../state_management/appstate.dart';
 import 'home.dart';
 import 'search.dart';
-import 'assessment.dart';
+import 'assessment/assessment.dart';
 import 'profile.dart';
 import '../widgets/custom_bottom_navigator.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_bottom_navigator.dart';
-import '../widgets/heading_bar.dart';
+import '../../widgets/custom_bottom_navigator.dart';
+import '../../widgets/heading_bar.dart';
 
 class AssessmentCompletedPage extends StatelessWidget {
   const AssessmentCompletedPage({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../controllers/assessment_controller.dart';
-import '../widgets/custom_bottom_navigator.dart';
-import '../widgets/heading_bar.dart';
-import '../entities/assessment.dart';
+import '../../controllers/assessment_controller.dart';
+import '../../widgets/custom_bottom_navigator.dart';
+import '../../widgets/heading_bar.dart';
+import '../../entities/assessment.dart';
 
 class QuestionPage extends StatelessWidget {
   final Exam exam;

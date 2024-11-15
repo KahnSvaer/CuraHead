@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../entities/user.dart';
@@ -14,13 +16,19 @@ class ProfileImageNotifier extends ChangeNotifier {
   });
 
   void setImageLoaded(bool value) {
-    isImageLoaded = value;
-    notifyListeners(); // Notify listeners when the image load status changes
+    // Schedule the state change to avoid calling notifyListeners during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isImageLoaded = value;
+      notifyListeners();
+    });
   }
 
   void setImageFailed() {
-    isImageLoaded = false;
-    notifyListeners(); // Notify listeners to fall back to initials
+    // Schedule the state change to avoid calling notifyListeners during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isImageLoaded = false;
+      notifyListeners(); // Notify listeners to fall back to initials
+    });
   }
 }
 
@@ -67,7 +75,7 @@ class ProfileImage extends StatelessWidget {
                         fontSize: radius * 0.7, // Adjust text size based on the radius
                       ),
                     );
-                  } else if (snapshot.hasError || snapshot.data == null || user.imageURL.isEmpty) {
+                  } else if (snapshot.hasError || snapshot.data == null) {
                     // If the image fails to load, fall back to initials
                     notifier.setImageFailed();
                     return Text(
@@ -112,9 +120,22 @@ class ProfileImage extends StatelessWidget {
 
   Future<ImageProvider> _loadImage(String url) async {
     try {
+      // Attempt to load the image from the network
+      final image = NetworkImage(url);
+      final completer = Completer<ImageInfo>();
+      final stream = image.resolve(ImageConfiguration());
+      stream.addListener(
+        ImageStreamListener((info, _) {
+          completer.complete(info);
+        }, onError: (exception, stackTrace) {
+          completer.completeError(exception);
+        }),
+      );
+      final imageInfo = await completer.future;
       return NetworkImage(url);
     } catch (e) {
-      throw Exception('Image loading failed');
+      // If there's an error, throw an exception or return fallback
+      throw Exception('Image loading failed: $e');
     }
   }
 

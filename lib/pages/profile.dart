@@ -1,17 +1,19 @@
-import 'package:curahead_app/widgets/appointment_card.dart';
-import 'package:curahead_app/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../entities/appointments.dart';
-import '../entities/therapist.dart';
 import '../entities/user.dart';
 import '../state_management/auth_provider.dart';
+
+import '../controllers/appointment_controller.dart';
+import '../widgets/appointment_card.dart';
+import '../widgets/profile_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
   @override
   Widget build(BuildContext context) {
+    final User? user = Provider.of<AuthProvider>(context).currentUser;
     ValueNotifier<int> graphNum = ValueNotifier(0);
     return SafeArea(child: LayoutBuilder(
       builder: (context, constraints) {
@@ -22,9 +24,9 @@ class ProfilePage extends StatelessWidget {
                 child: Container(
                     color: const Color(0xfff4f6ff),
                     child: Column(children: [
-                      _ModifiedWelcomeBar(graphNum: graphNum),
+                      _ModifiedWelcomeBar(graphNum: graphNum, user: user!),
                       _Graph(selectedNotifier: graphNum),
-                      const _AppointmentsBar()
+                      _AppointmentsBar(userID: user.uid,)
                     ]))),
           ),
         );
@@ -35,15 +37,16 @@ class ProfilePage extends StatelessWidget {
 
 class _ModifiedWelcomeBar extends StatelessWidget {
   final ValueNotifier<int> graphNum;
+  final User user;
 
   const _ModifiedWelcomeBar({
     required this.graphNum,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<AuthProvider>(context).currentUser;
-    final String displayName = user?.displayName ?? 'User';
+
     return Container(
       color: Colors.blue,
       padding: const EdgeInsets.all(10),
@@ -56,7 +59,7 @@ class _ModifiedWelcomeBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Profile Image
-                  ProfileImage(user: user!, radius: 60),
+                  ProfileImage(user: user, radius: 60),
                   const SizedBox(
                       width: 10), // Space between profile image and text
 
@@ -74,7 +77,7 @@ class _ModifiedWelcomeBar extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        displayName, // Dynamic profile name placeholder
+                        user.displayName, // Dynamic profile name placeholder
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -93,31 +96,28 @@ class _ModifiedWelcomeBar extends StatelessWidget {
           // Base content (profile image and text)
 
           Positioned.fill(
-            child: Container(
-              // color: Colors.black.withOpacity(0.2), // Overlay background with transparency
-              child: Align(
-                alignment: Alignment.bottomCenter, // Row aligned at the bottom
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                      ),
-                      _GraphIndicatorButton(
-                          selectedNotifier: graphNum,
-                          index: 0,
-                          text: "Feature 1"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      _GraphIndicatorButton(
-                          selectedNotifier: graphNum,
-                          index: 1,
-                          text: "Feature 2"),
-                    ],
-                  ),
+            child: Align(
+              alignment: Alignment.bottomCenter, // Row aligned at the bottom
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                    ),
+                    _GraphIndicatorButton(
+                        selectedNotifier: graphNum,
+                        index: 0,
+                        text: "Feature 1"),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    _GraphIndicatorButton(
+                        selectedNotifier: graphNum,
+                        index: 1,
+                        text: "Feature 2"),
+                  ],
                 ),
               ),
             ),
@@ -207,15 +207,16 @@ class _Graph extends StatelessWidget {
 }
 
 class _AppointmentsBar extends StatelessWidget {
-  const _AppointmentsBar({super.key});
+  final String userID;
+
+  const _AppointmentsBar({super.key, required this.userID});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(18.0),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Align content to the left
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'My Appointments',
@@ -225,15 +226,50 @@ class _AppointmentsBar extends StatelessWidget {
               color: Colors.black, // Text color for the heading
             ),
           ),
-          const SizedBox(height: 16.0),
-          AppointmentCard(
-            appointment: Appointment(
-              therapist: Therapist.withId("123"),
-              appointmentDateTime: DateTime.now().add(Duration(days: 1, hours: 2)), // Appointment for tomorrow at 2 hours later
-            ),
+          const SizedBox(height: 16.0), // Space between heading and content
+          FutureBuilder<List<Appointment>>(
+            future: AppointmentController().getUpcomingAppointmentsForClient(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Center(
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Center(
+                    child: Text(
+                      'No appointments scheduled.',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              } else {
+                final appointments = snapshot.data!;
+                return Column(
+                  children: appointments.map((appointment) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: AppointmentCard(appointment: appointment),
+                    );
+                  }).toList(),
+                );
+              }
+            },
           ),
         ],
       ),
     );
   }
 }
+

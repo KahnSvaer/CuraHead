@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/navigation_controller.dart';
-import '../pages/assessment_complete.dart';
+import '../pages/assessment/assessment_complete.dart';
 import '../entities/assessment.dart';
 import '../services/assessment_service.dart';
 

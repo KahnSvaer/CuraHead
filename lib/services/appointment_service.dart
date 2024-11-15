@@ -1,33 +1,55 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../services/user_services.dart';
 import '../entities/appointments.dart';
 
 class AppointmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final UserService _userService = UserService();  // Instance of UserService
 
   // Save a new booking
   Future<void> saveBooking(Appointment appointment) async {
     User? user = FirebaseAuth.instance.currentUser;
     String? userID = user?.uid;
+
     try {
-      await _firestore.collection('Bookings').add({
+      DocumentReference bookingRef = await _firestore.collection('Bookings').add({
         ...appointment.toMap(),
         'userID': userID,
       });
+
+      // Add the appointment ID to the user's appointment list
+      if (userID != null) {
+        await _userService.addAppointmentID(bookingRef.id);  // Assuming appointment has an ID field
+        print('Booking Added');
+      }
     } catch (e) {
       throw Exception("Error saving booking: $e");
     }
   }
 
-  // Get all bookings for a client
-  Future<List<Appointment>> getBookingsForClient(String userId) async {
+  Future<List<Appointment>> getBookingsForClient() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String? userID = user?.uid;
+
+    if (userID == null) {
+      throw Exception("User is not authenticated.");
+    }
+
     try {
+      List<String> appointmentIDs = await _userService.getAppointmentIDs();
+
+      if (appointmentIDs.isEmpty) {
+        return [];
+      }
+
       final QuerySnapshot snapshot = await _firestore
           .collection('Bookings')
-          .where('userId', isEqualTo: userId)
+          .where(FieldPath.documentId, whereIn: appointmentIDs)  // Get bookings where the ID matches one of the appointmentIDs
+          .where('userID', isEqualTo: userID)
           .get();
+
       return snapshot.docs.map((doc) {
         return Appointment.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
@@ -54,46 +76,34 @@ class AppointmentService {
   // Delete a booking by ID
   Future<void> deleteBooking(String bookingId) async {
     try {
+      // Delete the appointment from the 'Bookings' collection
       await _firestore.collection('Bookings').doc(bookingId).delete();
+
+      // Remove the appointment ID from the user's appointment list
+      await _userService.removeAppointmentID(bookingId);
     } catch (e) {
       throw Exception("Error deleting booking: $e");
     }
   }
 
   // Reschedule an appointment
-  Future<void> rescheduleBooking(String bookingId, DateTime newDateTime) async {
+  Future<void> rescheduleBooking(String bookingId, Timestamp newDateTime) async {
     try {
       await _firestore.collection('Bookings').doc(bookingId).update({
-        'appointmentDate': newDateTime.toIso8601String(),
+        'appointmentDate': newDateTime,
       });
     } catch (e) {
       throw Exception("Error rescheduling booking: $e");
     }
   }
 
-  // Get all bookings within a specific date range
-  Future<List<Appointment>> getBookingsInRange(DateTime startDate, DateTime endDate) async {
-    try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('Bookings')
-          .where('appointmentDate', isGreaterThanOrEqualTo: startDate.toIso8601String())
-          .where('appointmentDate', isLessThanOrEqualTo: endDate.toIso8601String())
-          .get();
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
-    } catch (e) {
-      throw Exception("Error fetching bookings in date range: $e");
-    }
-  }
-
   // Check availability for a specific time slot
-  Future<bool> isTimeSlotAvailable(String therapistId, DateTime dateTime) async {
+  Future<bool> isTimeSlotAvailable(String therapistId, Timestamp timeStamp) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('Bookings')
           .where('therapistId', isEqualTo: therapistId)
-          .where('appointmentDate', isEqualTo: dateTime.toIso8601String())
+          .where('appointmentDate', isEqualTo: timeStamp)
           .get();
       return snapshot.docs.isEmpty; // If no bookings exist for this slot, it is available
     } catch (e) {
@@ -101,48 +111,48 @@ class AppointmentService {
     }
   }
 
-  // Get bookings by status
-  Future<List<Appointment>> getBookingsByStatus(AppointmentStatus status) async {
-    try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('Bookings')
-          .where('status', isEqualTo: status.toString().split('.').last)
-          .get();
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
-    } catch (e) {
-      throw Exception("Error fetching bookings by status: $e");
-    }
-  }
 
   // Get upcoming bookings for a client
-  Future<List<Appointment>> getUpcomingAppointmentsForClient(String userId) async {
+  Future<List<Appointment>> getUpcomingAppointmentsForClient() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String? userID = user?.uid;
+
+    if (userID == null) {
+      throw Exception("User is not authenticated.");
+    }
+
     try {
+      List<String> appointmentIDs = await _userService.getAppointmentIDs();
+
+      if (appointmentIDs.isEmpty){
+        return [];
+      }
+
       final QuerySnapshot snapshot = await _firestore
           .collection('Bookings')
-          .where('userId', isEqualTo: userId)
-          .where('appointmentDate', isGreaterThanOrEqualTo: DateTime.now().toIso8601String())
+          .where(FieldPath.documentId, whereIn: appointmentIDs)
+          .where('userID', isEqualTo: userID)
           .get();
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+
+      // Code to filter out the appointments
+      List<Appointment> upcomingAppointments = [];
+      DateTime now = DateTime.now();
+      for (var doc in snapshot.docs) {
+        var timestamp = doc['appointmentDateTime'];
+        if (timestamp is Timestamp) {
+          DateTime appointmentDateTime = timestamp.toDate();
+          if (appointmentDateTime.isAfter(now)) {
+            upcomingAppointments.add(Appointment.fromMap(doc.data() as Map<String, dynamic>));
+          }
+        }
+      }
+      upcomingAppointments.sort((a, b) {
+        return a.appointmentDateTime.compareTo(b.appointmentDateTime);
+      });
+
+      return upcomingAppointments;
     } catch (e) {
       throw Exception("Error fetching upcoming appointments for client: $e");
-    }
-  }
-
-  // Count upcoming appointments for a therapist
-  Future<int> countUpcomingAppointmentsForTherapist(String therapistId) async {
-    try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('Bookings')
-          .where('therapistId', isEqualTo: therapistId)
-          .where('appointmentDate', isGreaterThanOrEqualTo: DateTime.now().toIso8601String())
-          .get();
-      return snapshot.docs.length; // Count how many upcoming appointments
-    } catch (e) {
-      throw Exception("Error counting upcoming appointments for therapist: $e");
     }
   }
 
