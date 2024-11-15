@@ -1,2 +1,16 @@
-# CuraHead
-CuraHead is a teleconsultation platform providing accessible psychological support. It addresses barriers such as location, time constraints, costs, and the stigma of seeking help. Users can consult with therapists, access personalized mental health assessments, and track their mental well-being over time, all on a secure digital platform.
+# curahead_app
+
+A teleconsultation application focused on connecting therapist with patients live using a mobile application.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

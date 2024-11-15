@@ -111,7 +111,6 @@ class ProfileImage extends StatelessWidget {
   }
 
   Future<ImageProvider> _loadImage(String url) async {
-    await Future.delayed(Duration(seconds: 1)); // Simulate loading delay
     try {
       return NetworkImage(url);
     } catch (e) {
