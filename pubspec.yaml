@@ -41,3 +41,4 @@ flutter:
   assets:
     - assets/icons/ # For icons
     - assets/data/ # For jsons
+    - assets/images/ # For images

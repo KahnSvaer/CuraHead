@@ -1,4 +1,7 @@
+import 'package:curahead_app/pages/splash_screen_loader.dart';
+import 'package:curahead_app/state_management/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../state_management/appstate.dart';
 import 'home.dart';
@@ -13,7 +16,7 @@ class BackGroundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // List of pages to navigate between
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const HomePage(),
       const TherapistPage(),
       const AssessmentPage(),
@@ -25,10 +28,20 @@ class BackGroundPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(10.0),
         child: Container(color: Colors.blue),
       ),
-      body: ValueListenableBuilder<int>(
-        valueListenable: AppState().selectedPageIndexNotifier,
-        builder: (context, selectedPageIndex, _) {
-          return _pages[selectedPageIndex]; // Display page based on current index
+      body: Consumer<AuthProvider>(
+        builder: (context, auth, child) {
+          final user = auth.currentUser;
+
+          if (user == null) {
+            return SplashScreen();
+          }
+
+          return ValueListenableBuilder<int>(
+            valueListenable: AppState().selectedPageIndexNotifier,
+            builder: (context, selectedPageIndex, _) {
+              return pages[selectedPageIndex];
+            },
+          );
         },
       ),
       bottomNavigationBar: const CustomBottomAppBar(),

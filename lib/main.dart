@@ -1,10 +1,8 @@
-import 'package:curahead_app/pages/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:curahead_app/firebase_options.dart';
 import 'package:provider/provider.dart';
 
-import 'entities/therapist.dart';
 import 'state_management/auth_provider.dart';
 import 'pages/background.dart';
 import 'pages/auth/auth_landing.dart'; // Import your auth landing page
