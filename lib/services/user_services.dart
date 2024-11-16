@@ -59,6 +59,24 @@ class UserService {
 
   Future<void> removeAppointmentID(String appointmentID) async => _updateUserField('appointmentIDs', appointmentID, false);
 
+  // Real-time listener for chat IDs
+  Stream<List<String>> listenToChatIDs() {
+    if (userID == null) {
+      throw Exception("User is not authenticated.");
+    }
+
+    final userRef = _firestore.collection('Users').doc(userID);
+
+    return userRef.snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        return List<String>.from(data['chatIDs'] ?? []);
+      } else {
+        return [];
+      }
+    });
+  }
+
   Future<List<String>> _getIDs(String field) async {
     if (userID == null) {
       throw Exception("User is not authenticated.");

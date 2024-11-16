@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curahead_app/controllers/navigation_controller.dart';
+import '../controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:curahead_app/entities/appointments.dart';
-import 'package:curahead_app/services/appointment_service.dart';
+import '../entities/appointments.dart';
+import '../services/appointment_service.dart';
 
 class AppointmentController{
   final AppointmentService _appointmentService = AppointmentService();

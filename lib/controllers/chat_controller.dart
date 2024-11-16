@@ -6,7 +6,7 @@ import '../entities/message.dart';
 
 class ChatController extends ChangeNotifier {
   final ChatService _chatService = ChatService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;  // Firebase Auth instance to access user information
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Variables to hold chat data
   List<Chat> _chats = [];
@@ -18,15 +18,35 @@ class ChatController extends ChangeNotifier {
   List<Message> get messages => _messages;
   bool get isLoading => _isLoading;
 
-  // Fetch all chats for the authenticated user
+  // Stream to listen to chats in real-time
+  Stream<List<Chat>> get chatsStream {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return _chatService.listenToChats(user.uid); // Real-time updates for chats
+    } else {
+      // Return an empty stream or handle accordingly
+      return Stream.empty();
+    }
+  }
+
+  // Stream to listen to messages in real-time for a specific chat
+  Stream<List<Message>> listenToMessages(String chatId) {
+    return _chatService.listenToChatMessages(chatId); // Real-time updates for messages in a chat
+  }
+
+  // Fetch all chats for the authenticated user (one-time fetch)
   Future<void> fetchChats() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final user = _auth.currentUser; // Retrieve the current authenticated user
+      final user = _auth.currentUser;
       if (user != null) {
-        _chats = await _chatService.getAllChats(user.uid);
+        // Use real-time listener instead of a one-time fetch
+        await for (var chatList in _chatService.listenToChats(user.uid)) {
+          _chats = chatList; // Update chat list as new data comes in
+          notifyListeners();
+        }
       } else {
         print("No authenticated user found.");
       }
@@ -35,22 +55,24 @@ class ChatController extends ChangeNotifier {
     }
 
     _isLoading = false;
-    notifyListeners();
   }
 
-  // Fetch messages within a specific chat
+  // Fetch messages within a specific chat (one-time fetch)
   Future<void> fetchMessages(String chatId) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _messages = await _chatService.getMessagesInChat(chatId);
+      // Fetch messages in real-time instead of a one-time fetch
+      await for (var messageList in _chatService.listenToChatMessages(chatId)) {
+        _messages = messageList; // Update messages as they arrive
+        notifyListeners();
+      }
     } catch (e) {
       print("Error fetching messages: $e");
     }
 
     _isLoading = false;
-    notifyListeners();
   }
 
   // Create a new chat
@@ -61,6 +83,7 @@ class ChatController extends ChangeNotifier {
     try {
       await _chatService.createChat(chatData);
       _chats.add(chatData); // Add the new chat to the local list
+      notifyListeners();
     } catch (e) {
       print("Error creating chat: $e");
     }
