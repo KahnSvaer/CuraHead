@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chat {
-  late final String? chatId;
+  String? chatId;
   final List<String> participants;  // List of user IDs in the chat
   final String lastMessage;
   final Timestamp lastUpdated;

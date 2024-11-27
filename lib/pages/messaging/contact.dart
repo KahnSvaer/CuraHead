@@ -1,46 +1,41 @@
-import 'package:curahead_app/entities/chat.dart';
-import 'package:curahead_app/entities/message.dart';
+import 'package:curahead_app/state_management/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';  // Import provider
-import '../../entities/user.dart';
-import '../../widgets/profile_image.dart';
-import 'chat.dart';
+import 'package:provider/provider.dart';
+import '../../controllers/chat_controller.dart';
+import '../../entities/chat.dart';
+import '../../entities/message.dart';
+import '../../entities/therapist.dart';
 import '../../services/chat_firestore_service.dart';
+import 'chat.dart';
+import '../../widgets/profile_image.dart';
 
 class ContactListPage extends StatelessWidget {
-  ContactListPage({super.key});
-
-  final ChatService _chatService = ChatService(); // Service for chat functionality
+  const ContactListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Access current user from provider
-    final User currentUser = Provider.of<User>(context, listen: false); // Use provider to get user info
+    final chatController = Provider.of<ChatController>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Contacts'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Contacts'), centerTitle: true),
       body: StreamBuilder<List<Chat>>(
-        stream: _chatService.listenToChats(currentUser.uid), // Stream for fetching chats involving the current user
-        builder: (context, contactsSnapshot) {
-          if (contactsSnapshot.connectionState == ConnectionState.waiting) {
+        stream: chatController.chatsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (contactsSnapshot.hasError) {
-            return Center(child: Text('Error: ${contactsSnapshot.error}'));
-          } else if (!contactsSnapshot.hasData || contactsSnapshot.data!.isEmpty) {
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No contacts available'));
           } else {
-            final contacts = contactsSnapshot.data!;
+            final contacts = snapshot.data!;
             return ListView.builder(
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final chat = contacts[index];
-                final otherParticipant = chat.participants
-                    .firstWhere((participant) => participant != currentUser.uid); // Get the other participant
-                final user = User(uid: otherParticipant, displayName: "", email: '', phoneNumber: ''); // Assuming you can fetch user details here
-                return ContactButton(user: user, chatId: chat.chatId!);
+
+
+                return ContactButton(chat: chat);
               },
             );
           }
@@ -51,22 +46,21 @@ class ContactListPage extends StatelessWidget {
 }
 
 class ContactButton extends StatelessWidget {
-  final User user;
-  final String chatId;
+  final Chat chat;
 
-  const ContactButton({required this.user, required this.chatId, super.key});
+  const ContactButton({required this.chat, super.key});
 
   @override
   Widget build(BuildContext context) {
-    String name = user.displayName;
     final ChatService chatService = ChatService();
-
+    final currentUserID = Provider.of<AuthProvider>(context).currentUser?.uid;
+    final therapistID = chat.participants.firstWhere((id) => id != currentUserID!);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: TextButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ChatPage(user: user, chatId: chatId)),
+            MaterialPageRoute(builder: (context) => ChatPage(chat: chat,)),
           );
         },
         style: TextButton.styleFrom(
@@ -79,20 +73,20 @@ class ContactButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            ProfileImage(user: user, radius: 20.0),
+            ProfileImage(user: Therapist.withId(therapistID), radius: 20.0),
             const SizedBox(width: 16),
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  name,
+                  Therapist.withId(therapistID).displayName,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
             ),
             // Display last message using Stream
             StreamBuilder<List<Message>>(
-              stream: chatService.listenToChatMessages(chatId), // Listening to the messages in the chat
+              stream: chatService.listenToChatMessages(chat.chatId!), // Listening to the messages in the chat
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();

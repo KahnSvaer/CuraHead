@@ -1,12 +1,16 @@
+import 'package:curahead_app/controllers/chat_controller.dart';
 import 'package:curahead_app/controllers/navigation_controller.dart';
 import 'package:curahead_app/pages/booking.dart';
+import 'package:curahead_app/pages/messaging/contact.dart';
 import 'package:curahead_app/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 
+import '../entities/chat.dart';
 import '../entities/therapist.dart';
 import '../widgets/heading_bar.dart';
 import '../widgets/star_rating.dart';
 import '../widgets/custom_bottom_navigator.dart';
+import 'messaging/chat.dart';
 
 class TherapistIntroPage extends StatelessWidget {
   final Therapist therapist;
@@ -107,8 +111,11 @@ class TherapistInformationWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () {
-                    print('Button 1 pressed');
+                  onPressed: () async {
+                    final Chat? chat = await ChatController().handleChat(context, therapist.uid);
+                    if (chat != null) {
+                      NavigationController.pushAndPopUntilRoot(context, ContactListPage());
+                    }
                   },
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(

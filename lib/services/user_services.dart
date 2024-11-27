@@ -47,7 +47,10 @@ class UserService {
     }
   }
 
-  Future<void> addChatID(String chatID) async => _updateUserField('chatIDs', chatID, true);
+  Future<void> addChatID(String chatID) async {
+    _updateUserField('chatIDs', chatID, true);
+    print("New Chat Added");
+  }
 
   Future<void> addAssessmentID(String assessmentID) async => _updateUserField('assessmentIDs', assessmentID, true);
 

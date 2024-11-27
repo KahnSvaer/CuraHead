@@ -79,7 +79,7 @@ class ChatController extends ChangeNotifier {
   Future<void> createChat(Chat chatData) async {
     _isLoading = true;
     notifyListeners();
-
+    print(chatData.toString());
     try {
       await _chatService.createChat(chatData);
       _chats.add(chatData); // Add the new chat to the local list
@@ -108,4 +108,34 @@ class ChatController extends ChangeNotifier {
     _messages = [];
     notifyListeners();
   }
+
+  Future<Chat?> handleChat(BuildContext context, String therapistID) async {
+    final currentUser = FirebaseAuth.instance.currentUser;// Replace with your user retrieval logic
+    if (currentUser?.uid == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: User not authenticated')),
+      );
+      return null;
+    }
+
+
+    try {
+      List<Chat> existingChats = await chatsStream.first;
+      List<Chat> ReleventChats = existingChats.where((chat) => chat.participants.contains(therapistID)).toList();
+      if (ReleventChats.isNotEmpty) {
+        print("Hey1");
+        return ReleventChats[0];
+      } else {
+        final newChat = Chat(participants: [currentUser!.uid, therapistID], );
+        createChat(newChat);
+        return newChat;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+      return null;
+    }
+  }
+
 }

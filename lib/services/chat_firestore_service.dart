@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curahead_app/services/user_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../entities/chat.dart';
 import '../entities/message.dart';
 
@@ -13,8 +14,9 @@ class ChatService {
 
       // Update chatId field in chatData
       await newChatRef.update({'chatId': newChatRef.id});
+      print(1);
       chatData.chatId = newChatRef.id; // Set chatId permanently
-
+      print(2);
       // Add system-generated message
       CollectionReference messagesRef = newChatRef.collection('Messages');
       await messagesRef.add({
@@ -28,7 +30,7 @@ class ChatService {
       await UserService().addChatID(newChatRef.id);
 
     } catch (e) {
-      print("Error creating chat: $e");
+      print("Error creating chat ChatService: $e");
     }
   }
 

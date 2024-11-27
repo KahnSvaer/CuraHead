@@ -1,16 +1,16 @@
+import 'package:curahead_app/state_management/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-import '../../entities/user.dart';
+import 'package:provider/provider.dart';
+import '../../controllers/chat_controller.dart';
+import '../../entities/chat.dart';
+import '../../entities/message.dart';
+import '../../entities/therapist.dart';
 
 class ChatPage extends StatefulWidget {
-  final User user;
-  final String chatId;
+  final Chat chat;
 
-  const ChatPage({
-    super.key,
-    required this.user,
-    required this.chatId,
-  });
+
+  const ChatPage({super.key, required this.chat});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -19,129 +19,118 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
 
-  void _sendMessage() async {
-    if (_messageController.text.trim().isNotEmpty) {
-      final message = {
-        "text": _messageController.text,
-        "senderId": widget.user.uid,
-        "time": FieldValue.serverTimestamp(),  // Firestore timestamp for real-time updates
-      };
-      // Send the message to Firestore under the specific chat
-      FirebaseFirestore.instance
-          .collection('chats')
-          .doc(widget.chatId)
-          .collection('messages')
-          .add(message);  // Add message to Firestore
+  void _sendMessage(String senderID) {
+    if (_messageController.text.trim().isNotEmpty && widget.chat.chatId != null) {
+      final chatController = Provider.of<ChatController>(context, listen: false);
+      chatController.sendMessage(
+        widget.chat.chatId!,
+        Message(
+          text: _messageController.text,
+          senderId: senderID,
+          localDateTime: DateTime.now(),
+          type: 'Text',
+        ),
+      );
       _messageController.clear();
+    }else{
+      print("ChatID still null");
     }
-  }
-
-  void _selectFromGallery() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Gallery selection not implemented')),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.user.displayName.isNotEmpty ? widget.user.displayName : 'Chat'),
-        centerTitle: true,
-      ),
-      body: GestureDetector(
-        onTap: () {
-          // Close keyboard when tapping outside of the text field
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('chats')
-                    .doc(widget.chatId)
-                    .collection('messages')
-                    .orderBy('time')  // Sort messages by timestamp
-                    .snapshots(),  // Listen to real-time updates
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No messages'));
-                  } else {
-                    final messages = snapshot.data!.docs;
-                    return ListView.builder(
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final message = messages[index];
-                        final messageText = message['text'];
-                        final messageTime = message['time']?.toDate();
-                        final senderId = message['senderId'];
-                        final isSentByUser = senderId == widget.user.uid;
+    final currentUserID = Provider.of<AuthProvider>(context).currentUser?.uid;
+    final therapistID = widget.chat.participants.firstWhere((id) => id != currentUserID!);
+    final chatController = Provider.of<ChatController>(context);
 
-                        return MessageWidget(
-                          messageText: messageText,
-                          messageTime: messageTime != null ? messageTime.toString() : 'N/A',
-                          isSentByUser: isSentByUser,
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
+    String? chatID = widget.chat.chatId;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(Therapist.withId(therapistID).displayName), centerTitle: true),
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<List<Message>>(
+              stream: chatController.listenToMessages(chatID!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No messages'));
+                } else {
+                  final messages = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
+                      return MessageWidget(
+                        message: message,
+                        currentUserID: currentUserID!,
+                      );
+                    },
+                  );
+                }
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.photo),
-                    onPressed: _selectFromGallery,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter message',
-                        contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter message',
+                      contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20.0),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: _sendMessage,
-                  ),
-                ],
-              ),
+                ),
+                IconButton(icon: const Icon(Icons.send), onPressed: () => _sendMessage(currentUserID!)),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class MessageWidget extends StatelessWidget {
-  final String messageText;
-  final String messageTime;
-  final bool isSentByUser;
+  final Message message;
+  final String currentUserID;
 
   const MessageWidget({
     super.key,
-    required this.messageText,
-    required this.messageTime,
-    required this.isSentByUser,
+    required this.message,
+    required this.currentUserID,
   });
+
+  String _formatTime(DateTime dateTime) {
+    int hour = dateTime.hour;
+    int minute = dateTime.minute;
+
+    // Determine AM or PM
+    String period = hour >= 12 ? 'PM' : 'AM';
+
+    // Convert hour to 12-hour format
+    hour = hour > 12 ? hour - 12 : hour;
+    hour = hour == 0 ? 12 : hour;  // Handle 12:00 PM and 12:00 AM case
+
+    // Format minute to always show two digits
+    String minuteStr = minute < 10 ? '0$minute' : '$minute';
+
+    return '$hour:$minuteStr $period';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final String messageText = message.text;
+    String messageTime = _formatTime(message.localDateTime);
+    final bool isSentByUser = message.senderId == currentUserID;
     return Align(
       alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(

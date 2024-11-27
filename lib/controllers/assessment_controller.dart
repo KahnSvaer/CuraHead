@@ -71,3 +71,4 @@ class AssessmentController {
   // A method to track if the exam is complete
   bool get isComplete => _session.isComplete();
 }
+

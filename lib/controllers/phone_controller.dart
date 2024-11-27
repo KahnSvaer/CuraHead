@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class UrlController {
+class PhoneController {
 
   static Future<void> launchPhoneNumber(String phoneNumber) async {
     try {
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             onPressed: () async {
               String phoneNumber = '';
               try {
-                await UrlController.launchPhoneNumber(phoneNumber);
+                await PhoneController.launchPhoneNumber(phoneNumber);
               } catch (e) {
                 showDialog(
                   context: context,

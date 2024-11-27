@@ -13,7 +13,7 @@ class Therapist extends User {
   final int numComments;
 
   Therapist({
-    required super.uid,
+    String? uid,
     required super.displayName,
     required super.email,
     required super.phoneNumber,
@@ -29,8 +29,9 @@ class Therapist extends User {
     this.patientsNum = 0,
     this.experience = 0,
     this.numComments = 0,
-
-  });
+  }): super(
+    uid: uid ?? displayName, // If uid is null, fallback to displayName
+  );
 
   // Would later use this to find therapist from database directly
   Therapist.withId(String uid)
