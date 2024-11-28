@@ -30,7 +30,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
+                image: AssetImage('assets/images/background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -39,7 +39,13 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 300),
+                const SizedBox(height: 100), // Space from the top
+                Image.asset(
+                  'assets/images/SplashScreen.png', // Path to your logo
+                  width: 100, // Adjust width as needed
+                  height: 100, // Adjust height as needed
+                ),
+                const SizedBox(height: 20), // Space between logo and fields
                 Center(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -51,36 +57,55 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Email TextField
-                        TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                        // Email Field in a Container
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          keyboardType: TextInputType.emailAddress,
+                          child: TextField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              border: InputBorder.none, // Remove default border inside the container
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        // Password TextField
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                                color: Colors.grey,
+
+                        // Password Field in a Container
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: TextField(
+                            controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: InputBorder.none, // Remove default border inside the container
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
                             ),
                           ),
                         ),
+
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(

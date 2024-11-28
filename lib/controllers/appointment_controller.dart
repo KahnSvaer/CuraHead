@@ -34,23 +34,12 @@ class AppointmentController{
   }
 
   // Get all bookings for a client
-  Future<List<Appointment>> getBookingsForClient(BuildContext context, String userId) async {
+  Future<List<Object>> getBookingsForClient(BuildContext context, String userId) async {
     try {
       final bookings = await _appointmentService.getBookingsForClient();
       return bookings;
     } catch (e) {
       _showErrorSnackBar(context, "Error fetching bookings for client: $e");
-      return [];
-    }
-  }
-
-  // Get all bookings for a therapist
-  Future<List<Appointment>> getBookingsForTherapist(BuildContext context, String therapistId) async {
-    try {
-      final bookings = await _appointmentService.getBookingsForTherapist(therapistId);
-      return bookings;
-    } catch (e) {
-      _showErrorSnackBar(context, "Error fetching bookings for therapist: $e");
       return [];
     }
   }

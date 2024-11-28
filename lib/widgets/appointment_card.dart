@@ -97,6 +97,8 @@ class AppointmentCardState extends State<AppointmentCard> {
                           fontWeight: FontWeight.w500,
                           color: Colors.grey[700],
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis, // Cuts off text with an ellipsis
                       ),
                     ],
                   ),

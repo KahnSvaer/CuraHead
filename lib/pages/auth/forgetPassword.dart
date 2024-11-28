@@ -38,7 +38,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 300),
+                const SizedBox(height: 100), // Space from the top
+                Image.asset(
+                  'assets/images/SplashScreen.png', // Path to your logo
+                  width: 100, // Adjust the width as needed
+                  height: 100, // Adjust the height as needed
+                ),
+                const SizedBox(height: 20), // Space between logo and title
                 Center(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -101,7 +107,7 @@ class BackgroundImage extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/background.jpg'),
+          image: AssetImage('assets/images/background.jpg'),
           fit: BoxFit.cover,
         ),
       ),

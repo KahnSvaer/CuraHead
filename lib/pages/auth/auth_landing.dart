@@ -4,7 +4,6 @@ import 'email_auth.dart';
 import 'signup.dart';
 
 import '../../controllers/navigation_controller.dart';
-
 import '../../controllers/auth_controller.dart';
 
 class AuthLandingPage extends StatelessWidget {
@@ -18,19 +17,25 @@ class AuthLandingPage extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
+                image: AssetImage('assets/images/background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
           SingleChildScrollView(
-            child: Center( // Center the inner widget
+            child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 200), // Space from top
+                  const SizedBox(height: 100), // Space from top
+                  Image.asset(
+                    'assets/images/SplashScreen.png', // Path to your icon
+                    width: 100, // Adjust the width as needed
+                    height: 100, // Adjust the height as needed
+                  ),
+                  const SizedBox(height: 20), // Space between logo and title
                   Container(
-                    padding: const EdgeInsets.fromLTRB(16,16,16,0),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                     margin: const EdgeInsets.symmetric(horizontal: 24.0),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.9),
@@ -40,11 +45,10 @@ class AuthLandingPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          'Welcome!',
+                          'Welcome to Curahead!',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-
                         const SizedBox(height: 40),
                         SizedBox(
                           width: double.infinity,
@@ -54,9 +58,9 @@ class AuthLandingPage extends StatelessWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0), // Rounded corners
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 15.0), // More rectangular
+                              padding: const EdgeInsets.symmetric(vertical: 15.0),
                             ),
                             child: const Text('Sign In'),
                           ),
@@ -70,9 +74,9 @@ class AuthLandingPage extends StatelessWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0), // Rounded corners
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 15.0), // More rectangular
+                              padding: const EdgeInsets.symmetric(vertical: 15.0),
                             ),
                             child: const Text('Register'),
                           ),
@@ -83,23 +87,49 @@ class AuthLandingPage extends StatelessWidget {
                         const Text('Sign in using', style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Ensures equal spacing
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: TextButton.icon(
                                 onPressed: () => SignInMethods().signInGoogle(context),
                                 icon: const Icon(
-                                  Icons.g_mobiledata, // Default Google icon
+                                  Icons.g_mobiledata,
                                   color: Colors.black,
                                 ),
                                 label: const Text('Google'),
                                 style: TextButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   foregroundColor: Colors.black,
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10), // Space between Google and Phone bars
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  // Add your phone sign-in logic here
+                                },
+                                icon: const Icon(
+                                  Icons.phone, // Icon for Phone
+                                  color: Colors.black,
+                                ),
+                                label: const Text('Phone'),
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.green),
                                 ),
                               ),
                             ),

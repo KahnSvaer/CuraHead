@@ -16,17 +16,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
   Future<void> registerUser() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-        await authProvider.registerWithEmail(
-          _emailController.text,
-          _passwordController.text,
-          _displayNameController.text,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration successful!')));
+      await authProvider.registerWithEmail(
+        _emailController.text,
+        _passwordController.text,
+        _displayNameController.text,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration successful!')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration failed: $e')));
     }
@@ -42,7 +41,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 300),
+                const SizedBox(height: 100), // Space from the top
+                Image.asset(
+                  'assets/images/SplashScreen.png', // Path to your logo
+                  width: 100, // Adjust the width as needed
+                  height: 100, // Adjust the height as needed
+                ),
+                const SizedBox(height: 20), // Space between logo and title
                 Center(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -55,28 +60,60 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          'Sign Up with Email', // Fixed sign-in method
+                          'Sign Up', // Fixed sign-in method
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _displayNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                        const SizedBox(height: 20),
+
+                        // Name Field in a Container
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: TextField(
+                            controller: _displayNameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Name',
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+
+                        // Email Field in a Container
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          keyboardType: TextInputType.emailAddress,
+                          child: TextField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              border: InputBorder.none,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        PasswordField(controller: _passwordController),
+
+                        // Password Field in a Container
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: PasswordField(controller: _passwordController),
+                        ),
+
                         const SizedBox(height: 20),
                         RegisterButton(onPressed: registerUser),
                         const SizedBox(height: 20),
@@ -104,7 +141,7 @@ class BackgroundImage extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/background.jpg'),
+          image: AssetImage('assets/images/background.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -123,7 +160,7 @@ class PasswordField extends StatelessWidget {
       controller: controller,
       decoration: const InputDecoration(
         labelText: 'Password',
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+        border: InputBorder.none, // No border inside the container
       ),
       obscureText: true,
     );

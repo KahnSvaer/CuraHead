@@ -26,7 +26,7 @@ class TherapistCard extends StatelessWidget {
 
     return TextButton(
       onPressed: () {
-        NavigationController.navigateToPage(context, TherapistIntroPage(therapist: Therapist.withId("1234"),));
+        NavigationController.navigateToPage(context, TherapistIntroPage(therapist: therapist,));
       },
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
@@ -72,6 +72,8 @@ class TherapistCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: Colors.grey[700],
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis, // Cuts off text with an ellipsis
                   ),
                   RatingStars(
                     rating: rating,

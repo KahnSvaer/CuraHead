@@ -58,21 +58,6 @@ class AppointmentService {
     }
   }
 
-  // Get all bookings for a therapist
-  Future<List<Appointment>> getBookingsForTherapist(String therapistId) async {
-    try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('Bookings')
-          .where('therapistId', isEqualTo: therapistId)
-          .get();
-      return snapshot.docs.map((doc) {
-        return Appointment.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
-    } catch (e) {
-      throw Exception("Error fetching bookings for therapist: $e");
-    }
-  }
-
   // Delete a booking by ID
   Future<void> deleteBooking(String bookingId) async {
     try {
